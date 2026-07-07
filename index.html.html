@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Management Report — Northside Electrical</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #f3f2f1; color: #252423; }
+
+  .header {
+    background: #1a1a2e;
+    color: white;
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header h1 { font-size: 18px; font-weight: 600; letter-spacing: 0.3px; }
+  .header .subtitle { font-size: 12px; color: #aaa; margin-top: 2px; }
+  .header .date-badge {
+    background: #e8b84b;
+    color: #1a1a2e;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .dashboard { padding: 20px 24px; }
+
+  /* KPI ROW */
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+  .kpi-card {
+    background: white;
+    border-radius: 6px;
+    padding: 18px 20px;
+    border-left: 4px solid #ccc;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .kpi-card.total  { border-left-color: #1a1a2e; }
+  .kpi-card.current { border-left-color: #107c10; }
+  .kpi-card.soon   { border-left-color: #e8b84b; }
+  .kpi-card.overdue { border-left-color: #d13438; }
+  .kpi-label { font-size: 11px; text-transform: uppercase; color: #666; letter-spacing: 0.5px; font-weight: 600; }
+  .kpi-value { font-size: 26px; font-weight: 700; margin-top: 6px; }
+  .kpi-card.total .kpi-value  { color: #1a1a2e; }
+  .kpi-card.current .kpi-value { color: #107c10; }
+  .kpi-card.soon .kpi-value   { color: #b88a00; }
+  .kpi-card.overdue .kpi-value { color: #d13438; }
+  .kpi-sub { font-size: 11px; color: #999; margin-top: 4px; }
+
+  /* BANK BALANCE ROW */
+  .bank-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  .bank-card {
+    border-radius: 6px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  }
+  .bank-card.positive { background: #107c10; }
+  .bank-card.negative { background: #d13438; }
+  .bank-icon { font-size: 32px; opacity: 0.85; }
+  .bank-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; color: rgba(255,255,255,0.75); font-weight: 600; }
+  .bank-value { font-size: 30px; font-weight: 700; color: white; margin-top: 4px; letter-spacing: -0.5px; }
+  .bank-sub { font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 5px; }
+  .bank-divider { width: 1px; background: rgba(255,255,255,0.2); height: 48px; }
+
+  /* CHART ROW */
+  .row-2 { display: grid; grid-template-columns: 300px 1fr; gap: 14px; margin-bottom: 20px; }
+  .row-3 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+
+  .card {
+    background: white;
+    border-radius: 6px;
+    padding: 18px 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #252423;
+    margin-bottom: 16px;
+    border-bottom: 2px solid #f3f2f1;
+    padding-bottom: 10px;
+  }
+  .card-title span { font-size: 11px; font-weight: 400; color: #888; margin-left: 6px; }
+  .chart-wrap { position: relative; }
+
+  /* ALERTS */
+  .alert-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 20px; }
+  .alert-card {
+    background: white;
+    border-radius: 6px;
+    padding: 14px 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    border-top: 3px solid #d13438;
+  }
+  .alert-card.warn { border-top-color: #e8b84b; }
+  .alert-card.info { border-top-color: #0078d4; }
+  .alert-supplier { font-size: 13px; font-weight: 600; }
+  .alert-detail { font-size: 12px; color: #666; margin-top: 4px; }
+  .alert-amount { font-size: 18px; font-weight: 700; color: #d13438; margin-top: 6px; }
+  .alert-card.warn .alert-amount { color: #b88a00; }
+  .alert-card.info .alert-amount { color: #0078d4; }
+
+  /* TABLE */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  thead th {
+    background: #1a1a2e;
+    color: white;
+    padding: 9px 12px;
+    text-align: right;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+  }
+  thead th:first-child { text-align: left; }
+  tbody tr:nth-child(even) { background: #fafafa; }
+  tbody tr:hover { background: #f0f6ff; }
+  td { padding: 7px 12px; text-align: right; border-bottom: 1px solid #f0f0f0; }
+  td:first-child { text-align: left; color: #1a1a2e; font-weight: 500; }
+  tfoot td { font-weight: 700; background: #1a1a2e; color: white; padding: 9px 12px; }
+  tfoot td:first-child { text-align: left; }
+
+  .cell-warn  { color: #b88a00; font-weight: 600; }
+  .cell-over1 { color: #e37c00; font-weight: 600; }
+  .cell-over2 { color: #d13438; font-weight: 700; }
+  .cell-credit { color: #107c10; font-style: italic; }
+  .cell-zero  { color: #ccc; }
+
+  .footer { text-align: center; font-size: 11px; color: #aaa; padding: 12px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>Management Report</h1>
+    <div class="subtitle">Northside Electrical &nbsp;|&nbsp; Source: Xero Export</div>
+  </div>
+  <div class="date-badge">As at July 2025</div>
+</div>
+
+<div class="dashboard">
+
+  <!-- BANK BALANCE CARDS -->
+  <div class="bank-row">
+    <div class="bank-card negative">
+      <div class="bank-icon">💰</div>
+      <div class="bank-divider"></div>
+      <div>
+        <div class="bank-label">Balance</div>
+        <div class="bank-value">($168,794.80)</div>
+        <div class="bank-sub">Drawn into overdraft facility</div>
+      </div>
+    </div>
+    <div class="bank-card positive">
+      <div class="bank-icon">🏦</div>
+      <div class="bank-divider"></div>
+      <div>
+        <div class="bank-label">Funds Available</div>
+        <div class="bank-value">$140,327.04</div>
+        <div class="bank-sub">Available including overdraft facility</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECEIVABLES SECTION -->
+  <div style="font-size:12px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Expected Cash Receivables — July 2026</div>
+
+  <div class="kpi-row" style="margin-bottom:14px;grid-template-columns:repeat(5,1fr);">
+    <div class="kpi-card" style="border-left-color:#107c10;">
+      <div class="kpi-label">Total Expected</div>
+      <div class="kpi-value" style="color:#107c10;">$3.82M</div>
+      <div class="kpi-sub">11 receipts · Jul 2026</div>
+    </div>
+    <div class="kpi-card" style="border-left-color:#0078d4;">
+      <div class="kpi-label">Week 1 · 7–13 Jul</div>
+      <div class="kpi-value" style="color:#0078d4;">$2.02M</div>
+      <div class="kpi-sub">3 receipts</div>
+    </div>
+    <div class="kpi-card" style="border-left-color:#e8b84b;">
+      <div class="kpi-label">Week 2 · 14–20 Jul</div>
+      <div class="kpi-value" style="color:#b88a00;">$89.6K</div>
+      <div class="kpi-sub">1 receipt</div>
+    </div>
+    <div class="kpi-card" style="border-left-color:#0078d4;">
+      <div class="kpi-label">Week 3 · 21–27 Jul</div>
+      <div class="kpi-value" style="color:#0078d4;">$1.04M</div>
+      <div class="kpi-sub">6 receipts</div>
+    </div>
+    <div class="kpi-card" style="border-left-color:#1a1a2e;">
+      <div class="kpi-label">Week 4 · 28 Jul–3 Aug</div>
+      <div class="kpi-value" style="color:#1a1a2e;">$668.0K</div>
+      <div class="kpi-sub">1 receipt</div>
+    </div>
+  </div>
+
+  <div class="row-3" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title">Cash Inflow by Week <span>expected receipts · Jul 2026</span></div>
+      <div class="chart-wrap" style="height:260px"><canvas id="receivablesChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Expected Receipts Detail <span>sorted by date</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th style="text-align:left;">Project</th>
+              <th>Expected</th>
+              <th>Days</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background:#f0fff0;">
+              <td>Total Special Projects</td>
+              <td style="text-align:left;">Stacked Farm</td>
+              <td style="color:#107c10;font-weight:700;">7 Jul</td>
+              <td style="color:#107c10;font-weight:700;">1</td>
+              <td style="color:#107c10;font-weight:700;">$785,807.00</td>
+            </tr>
+            <tr style="background:#f0fff0;">
+              <td>Mainbrace</td>
+              <td style="text-align:left;">Fountain Gate</td>
+              <td style="color:#107c10;font-weight:700;">10 Jul</td>
+              <td style="color:#107c10;font-weight:700;">4</td>
+              <td style="color:#107c10;font-weight:700;">$805,662.59</td>
+            </tr>
+            <tr style="background:#f0fff0;">
+              <td>Oreana Construct</td>
+              <td style="text-align:left;">Aston Craigieburn</td>
+              <td style="color:#107c10;font-weight:700;">12 Jul</td>
+              <td style="color:#107c10;font-weight:700;">6</td>
+              <td style="color:#107c10;font-weight:700;">$423,723.23</td>
+            </tr>
+            <tr>
+              <td>ADCO</td>
+              <td style="text-align:left;">Kingston Aquatic Centre</td>
+              <td>15 Jul</td>
+              <td>9</td>
+              <td>$89,614.00</td>
+            </tr>
+            <tr style="background:#fafafa;">
+              <td>Built Environs</td>
+              <td style="text-align:left;">Punt Rd Oval</td>
+              <td>22 Jul</td>
+              <td>16</td>
+              <td>$166,218.00</td>
+            </tr>
+            <tr>
+              <td>Hutchinson</td>
+              <td style="text-align:left;">KSS Cranbourne</td>
+              <td>26 Jul</td>
+              <td>20</td>
+              <td>$283,750.17</td>
+            </tr>
+            <tr style="background:#fafafa;">
+              <td>Hutchinson</td>
+              <td style="text-align:left;">KSS Craigieburn</td>
+              <td>26 Jul</td>
+              <td>20</td>
+              <td>$107,746.60</td>
+            </tr>
+            <tr>
+              <td>Hutchinson</td>
+              <td style="text-align:left;">KSS Roxburgh Park</td>
+              <td>26 Jul</td>
+              <td>20</td>
+              <td>$106,948.32</td>
+            </tr>
+            <tr style="background:#fafafa;">
+              <td>Hutchinson Builders</td>
+              <td style="text-align:left;">Kennards Brunswick</td>
+              <td>26 Jul</td>
+              <td>20</td>
+              <td>$23,810.86</td>
+            </tr>
+            <tr style="background:#fafafa;">
+              <td>Kane Constructions</td>
+              <td style="text-align:left;">Ballarat Major Events Precinct</td>
+              <td>26 Jul</td>
+              <td>20</td>
+              <td>$355,030.96</td>
+            </tr>
+            <tr>
+              <td>Total Special Projects</td>
+              <td style="text-align:left;">Stacked Farm (2nd)</td>
+              <td>30 Jul</td>
+              <td>24</td>
+              <td>$667,961.72</td>
+            </tr>
+            <tr style="background:#fafafa;">
+              <td style="color:#999;">SJ Higgins</td>
+              <td style="text-align:left;color:#999;">Mecwacare Ballan</td>
+              <td style="color:#999;">TBC</td>
+              <td style="color:#999;">—</td>
+              <td style="color:#999;">—</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4">TOTAL</td>
+              <td>$3,816,273.45</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div style="font-size:12px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Accounts Payable Summary</div>
+
+  <!-- KPI CARDS -->
+  <div class="kpi-row">
+    <div class="kpi-card total">
+      <div class="kpi-label">Total Payables</div>
+      <div class="kpi-value">$3.16M</div>
+      <div class="kpi-sub">88 suppliers</div>
+    </div>
+    <div class="kpi-card current">
+      <div class="kpi-label">Current (Not Yet Due)</div>
+      <div class="kpi-value">$971K</div>
+      <div class="kpi-sub">30.7% of total</div>
+    </div>
+    <div class="kpi-card soon">
+      <div class="kpi-label">Due &lt; 1 Month</div>
+      <div class="kpi-value">$1.32M</div>
+      <div class="kpi-sub">41.8% of total</div>
+    </div>
+    <div class="kpi-card overdue">
+      <div class="kpi-label">Overdue 1M+</div>
+      <div class="kpi-value">$865K</div>
+      <div class="kpi-sub">27.4% of total · action required</div>
+    </div>
+  </div>
+
+  <!-- DONUT + TOP SUPPLIERS -->
+  <div class="row-2">
+    <div class="card">
+      <div class="card-title">Aging Breakdown</div>
+      <div class="chart-wrap" style="height:230px">
+        <canvas id="donutChart"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Top 10 Suppliers by Total Outstanding <span>sorted by value</span></div>
+      <div class="chart-wrap" style="height:230px">
+        <canvas id="topSuppliersChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALERT CARDS -->
+  <div style="font-size:12px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Attention Required</div>
+  <div class="alert-row">
+    <div class="alert-card">
+      <div class="alert-supplier">Q Industries</div>
+      <div class="alert-detail">$70,025 sitting at 2 months overdue</div>
+      <div class="alert-amount">$112,328 total</div>
+    </div>
+    <div class="alert-card">
+      <div class="alert-supplier">Chief Group Solutions</div>
+      <div class="alert-detail">$27,540 at 2 months, $25,938 at 1 month</div>
+      <div class="alert-amount">$66,791 total</div>
+    </div>
+    <div class="alert-card warn">
+      <div class="alert-supplier">Active Elec Distrib</div>
+      <div class="alert-detail">$294,601 at 1 month — largest single overdue</div>
+      <div class="alert-amount" style="color:#b88a00">$834,866 total</div>
+    </div>
+    <div class="alert-card warn">
+      <div class="alert-supplier">Tricab</div>
+      <div class="alert-detail">$78,673 at 1 month, spread across all buckets</div>
+      <div class="alert-amount" style="color:#b88a00">$224,155 total</div>
+    </div>
+    <div class="alert-card info">
+      <div class="alert-supplier">Impact Apprentices</div>
+      <div class="alert-detail">Credit balance — supplier owes you</div>
+      <div class="alert-amount" style="color:#107c10">($10,274) credit</div>
+    </div>
+    <div class="alert-card info">
+      <div class="alert-supplier">Urban Pineapple</div>
+      <div class="alert-detail">Credit balance — supplier owes you</div>
+      <div class="alert-amount" style="color:#107c10">($1,467) credit</div>
+    </div>
+  </div>
+
+  <!-- OVERTIME TABLES -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+    <div class="card">
+      <div class="card-title">Top 10 by Overtime Hours</div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px;">
+        <thead>
+          <tr>
+            <th style="background:#1a1a2e;color:white;padding:8px 12px;text-align:left;font-size:11px;font-weight:600;">Location</th>
+            <th style="background:#1a1a2e;color:white;padding:8px 12px;text-align:right;font-size:11px;font-weight:600;">Hours</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:#fff3f3;"><td style="padding:7px 12px;font-weight:600;color:#d13438;">Aston Craigieburn</td><td style="padding:7px 12px;text-align:right;font-weight:700;color:#d13438;">89.5</td></tr>
+          <tr style="background:#fafafa;"><td style="padding:7px 12px;">Kennards Brunswick</td><td style="padding:7px 12px;text-align:right;">52.0</td></tr>
+          <tr><td style="padding:7px 12px;">BMEP</td><td style="padding:7px 12px;text-align:right;">33.0</td></tr>
+          <tr style="background:#fafafa;"><td style="padding:7px 12px;">Kingston Aquatic Centre</td><td style="padding:7px 12px;text-align:right;">28.0</td></tr>
+          <tr><td style="padding:7px 12px;">Punt Road Oval</td><td style="padding:7px 12px;text-align:right;">26.0</td></tr>
+          <tr style="background:#fafafa;"><td style="padding:7px 12px;">Fountain Gate Super Centre</td><td style="padding:7px 12px;text-align:right;">25.5</td></tr>
+          <tr><td style="padding:7px 12px;">Kennards Craigieburn</td><td style="padding:7px 12px;text-align:right;">22.5</td></tr>
+          <tr style="background:#fafafa;"><td style="padding:7px 12px;">Stacked Farm</td><td style="padding:7px 12px;text-align:right;">19.5</td></tr>
+          <tr><td style="padding:7px 12px;">Kennards Cranbourne</td><td style="padding:7px 12px;text-align:right;">8.5</td></tr>
+          <tr style="background:#fafafa;"><td style="padding:7px 12px;">Northside Electrical Contractors</td><td style="padding:7px 12px;text-align:right;">8.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">Top 10 by Overtime Cost</div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px;">
+        <thead>
+          <tr>
+            <th style="background:#1a1a2e;color:white;padding:8px 12px;text-align:left;font-size:11px;font-weight:600;">Location</th>
+            <th style="background:#1a1a2e;color:white;padding:8px 12px;text-align:right;font-size:11px;font-weight:600;">Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:#fff3f3;"><td style="padding:7px 12px;font-weight:600;color:#d13438;">Aston Craigieburn</td><td style="padding:7px 12px;text-align:right;font-weight:700;color:#d13438;">$12,235.15</td></tr>
+          <tr style="background:#fafafa;"><td style="padding:7px 12px;">Kennards Brunswick</td><td style="padding:7px 12px;text-align:right;">$5,936.10</td></tr>
+          <tr><td style="padding:7px 12px;">BMEP</td><td style="padding:7px 12px;text-align:right;">$4,133.82</td></tr>
+          <tr style="background:#fafafa;"><td style="padding:7px 12px;">Kingston Aquatic Centre</td><td style="padding:7px 12px;text-align:right;">$3,636.38</td></tr>
+          <tr><td style="padding:7px 12px;">Fountain Gate Super Centre</td><td style="padding:7px 12px;text-align:right;">$3,520.92</td></tr>
+          <tr style="background:#fafafa;"><td style="padding:7px 12px;">Kennards Craigieburn</td><td style="padding:7px 12px;text-align:right;">$3,260.25</td></tr>
+          <tr><td style="padding:7px 12px;">Punt Road Oval</td><td style="padding:7px 12px;text-align:right;">$3,233.43</td></tr>
+          <tr style="background:#fafafa;"><td style="padding:7px 12px;">Stacked Farm</td><td style="padding:7px 12px;text-align:right;">$2,042.32</td></tr>
+          <tr><td style="padding:7px 12px;">Kennards Cranbourne</td><td style="padding:7px 12px;text-align:right;">$844.21</td></tr>
+          <tr style="background:#fafafa;"><td style="padding:7px 12px;">Northside Electrical Contractors</td><td style="padding:7px 12px;text-align:right;">$791.04</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- OVERTIME CHARTS -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 300px;gap:14px;margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title">Top 10 by Overtime Hours</div>
+      <div class="chart-wrap" style="height:280px"><canvas id="overtimeHoursChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Top 10 by Overtime Cost</div>
+      <div class="chart-wrap" style="height:280px"><canvas id="overtimeCostChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Current Liabilities</div>
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <tbody>
+          <tr style="border-bottom:1px solid #f0f0f0;">
+            <td style="padding:11px 8px 11px 0;font-weight:600;color:#252423;">PAYG Withholding</td>
+            <td style="padding:11px 0;text-align:right;font-weight:700;color:#d13438;">$432,417.00</td>
+          </tr>
+          <tr style="background:#fafafa;border-bottom:1px solid #f0f0f0;">
+            <td style="padding:11px 8px 11px 0;font-weight:600;color:#252423;">Superannuation (SGC)</td>
+            <td style="padding:11px 0;text-align:right;font-weight:700;color:#b88a00;">$80,992.83</td>
+          </tr>
+          <tr style="border-bottom:1px solid #f0f0f0;">
+            <td style="padding:11px 8px 11px 0;font-weight:600;color:#252423;">PROTECT</td>
+            <td style="padding:11px 0;text-align:right;font-weight:700;color:#0078d4;">$34,315.50</td>
+          </tr>
+          <tr style="background:#fafafa;border-bottom:1px solid #f0f0f0;">
+            <td style="padding:11px 8px 11px 0;font-weight:600;color:#252423;">Payroll Tax</td>
+            <td style="padding:11px 0;text-align:right;color:#aaa;font-style:italic;">TBC</td>
+          </tr>
+          <tr style="border-bottom:1px solid #f0f0f0;">
+            <td style="padding:11px 8px 11px 0;font-weight:600;color:#252423;">Leave Plus</td>
+            <td style="padding:11px 0;text-align:right;color:#aaa;font-style:italic;">TBC</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td style="padding:10px 8px 10px 0;font-weight:700;background:#1a1a2e;color:white;">TOTAL KNOWN</td>
+            <td style="padding:10px 0;text-align:right;font-weight:700;background:#1a1a2e;color:white;">$547,725.33</td>
+          </tr>
+        </tfoot>
+      </table>
+      <div style="font-size:11px;color:#999;margin-top:10px;">Payroll Tax &amp; Leave Plus pending · total will increase</div>
+    </div>
+  </div>
+
+  <!-- WORKFORCE RISKS -->
+  <div style="font-size:12px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Top Workforce Risks</div>
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title">Workforce Risk Register <span>Northside Electrical Contractors — Weekly Workforce & Payroll Dashboard</span></div>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead>
+        <tr>
+          <th style="background:#1a1a2e;color:white;padding:9px 14px;text-align:left;font-size:11px;font-weight:600;letter-spacing:0.3px;width:40%;">Risk Description</th>
+          <th style="background:#1a1a2e;color:white;padding:9px 14px;text-align:left;font-size:11px;font-weight:600;letter-spacing:0.3px;width:45%;">Detail</th>
+          <th style="background:#1a1a2e;color:white;padding:9px 14px;text-align:center;font-size:11px;font-weight:600;letter-spacing:0.3px;width:15%;">Severity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid #f0f0f0;">
+          <td style="padding:11px 14px;font-weight:600;color:#252423;">Excessive overtime at Aston Craigieburn</td>
+          <td style="padding:11px 14px;color:#555;">89.5 hours &nbsp;·&nbsp; <strong style="color:#d13438;">$12,235</strong></td>
+          <td style="padding:11px 14px;text-align:center;">
+            <span style="background:#d13438;color:white;padding:3px 12px;border-radius:12px;font-size:11px;font-weight:700;letter-spacing:0.5px;">RED</span>
+          </td>
+        </tr>
+        <tr style="background:#fafafa;border-bottom:1px solid #f0f0f0;">
+          <td style="padding:11px 14px;font-weight:600;color:#252423;">Workforce reconciliation below target</td>
+          <td style="padding:11px 14px;color:#555;">95.2% reconciled</td>
+          <td style="padding:11px 14px;text-align:center;">
+            <span style="background:#e8b84b;color:#1a1a2e;padding:3px 12px;border-radius:12px;font-size:11px;font-weight:700;letter-spacing:0.5px;">AMBER</span>
+          </td>
+        </tr>
+        <tr style="border-bottom:1px solid #f0f0f0;">
+          <td style="padding:11px 14px;font-weight:600;color:#252423;">Significant hours variance</td>
+          <td style="padding:11px 14px;color:#555;">1 employee — all acknowledged</td>
+          <td style="padding:11px 14px;text-align:center;">
+            <span style="background:#e8b84b;color:#1a1a2e;padding:3px 12px;border-radius:12px;font-size:11px;font-weight:700;letter-spacing:0.5px;">AMBER</span>
+          </td>
+        </tr>
+        <tr style="background:#fafafa;border-bottom:1px solid #f0f0f0;">
+          <td style="padding:11px 14px;font-weight:600;color:#252423;">Large travel costs</td>
+          <td style="padding:11px 14px;color:#555;"><strong style="color:#b88a00;">$13,280</strong> &nbsp;·&nbsp; 5.8% of gross payroll</td>
+          <td style="padding:11px 14px;text-align:center;">
+            <span style="background:#e8b84b;color:#1a1a2e;padding:3px 12px;border-radius:12px;font-size:11px;font-weight:700;letter-spacing:0.5px;">AMBER</span>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:11px 14px;font-weight:600;color:#252423;">Concentrated labour cost — single project</td>
+          <td style="padding:11px 14px;color:#555;">Aston Craigieburn at <strong style="color:#b88a00;">17.7%</strong> of total labour cost</td>
+          <td style="padding:11px 14px;text-align:center;">
+            <span style="background:#e8b84b;color:#1a1a2e;padding:3px 12px;border-radius:12px;font-size:11px;font-weight:700;letter-spacing:0.5px;">AMBER</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DETAIL TABLE -->
+  <div class="card">
+    <div class="card-title">Full Supplier Detail <span>all suppliers · click column headers to sort in Power BI</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Supplier</th>
+            <th>Current</th>
+            <th>&lt; 1 Month</th>
+            <th>1 Month</th>
+            <th>2 Months</th>
+            <th>3 Months</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody id="supplierTable"></tbody>
+        <tfoot>
+          <tr>
+            <td>TOTAL</td>
+            <td>$971,139</td>
+            <td>$1,321,747</td>
+            <td>$778,658</td>
+            <td>$88,947</td>
+            <td>($2,693)</td>
+            <td>$3,157,798</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Northside Electrical &nbsp;·&nbsp; Data exported from Xero &nbsp;·&nbsp; July 2025 &nbsp;·&nbsp; For internal use only</div>
+
+<script>
+const fmt = (n) => {
+  if (n === 0) return '<span class="cell-zero">—</span>';
+  const abs = Math.abs(n);
+  const str = '$' + abs.toLocaleString('en-AU', {minimumFractionDigits:2, maximumFractionDigits:2});
+  return n < 0 ? '<span class="cell-credit">(' + str + ')</span>' : str;
+};
+
+const suppliers = [
+  ["1PD - 1 Point Distribution",0,6306.30,11944.46,0,0,0,18250.76],
+  ["Active Elec Distrib",540265.26,0,294600.95,0,0,0,834866.21],
+  ["Advanced Crane Trucks",0,0,1233.72,0,0,0,1233.72],
+  ["All Trades",0,0,6670.18,0,0,0,6670.18],
+  ["AWM",102544.49,12817.13,0,0,0,0,115361.62],
+  ["Big Ideas Company",0,149.60,0,0,0,0,149.60],
+  ["Bluebeam",0,12217.58,0,0,0,0,12217.58],
+  ["CBW Crane Hire & Rigging",0,16500,0,0,0,0,16500],
+  ["Chief Group Solutions",0,1716,0,0,0,0,1716],
+  ["Chief Group Solutions Pty Ltd",0,13312.75,25938.28,27539.60,0,0,66790.63],
+  ["Clifton McCorkell",0,1680,0,0,0,0,1680],
+  ["Collective Crane Hire",0,9013.30,0,0,0,0,9013.30],
+  ["Country Victoria Electrical Inspections Pty Ltd",0,0,957,0,0,0,957],
+  ["CPS Plumbing",0,2860,0,0,0,0,2860],
+  ["CreditorWatch",0,385,0,0,0,0,385],
+  ["CREFFIELD DIGITAL PRINT",0,1238.60,0,0,0,0,1238.60],
+  ["DC AUTOCARE",0,1696,0,0,0,0,1696],
+  ["DNN Australia",0,0,247.50,0,0,0,247.50],
+  ["DRC Switchboards",0,248290,0,0,0,0,248290],
+  ["EDCW",0,10329,0,0,0,0,10329],
+  ["EIC - Electrical Inspection and Certification",0,302.50,0,0,0,0,302.50],
+  ["Elite Surveying",0,935,0,0,0,0,935],
+  ["EML Workcover",0,0,9473.99,0,0,0,9473.99],
+  ["Epsom Hire",0,257.12,0,0,0,0,257.12],
+  ["Errand Transport Services",0,1632.54,220.89,0,0,0,1853.43],
+  ["Everlite",0,0,2746.02,0,0,0,2746.02],
+  ["Fire Rating Solutions",0,11588.50,0,0,0,0,11588.50],
+  ["FM Group Civil Pty Ltd",0,0,7678,0,0,0,7678],
+  ["FUJI XEROX",0,0,0,430.44,0,0,430.44],
+  ["Gforce Employment",0,9243.13,0,0,0,0,9243.13],
+  ["Google Workspace",0,1398.73,0,0,0,0,1398.73],
+  ["Grunt Invoice Protection",0,990,0,0,0,0,990],
+  ["Highbury Plumbing",0,55009.90,0,0,0,0,55009.90],
+  ["Hightower Concrete Cutter",0,484,0,0,0,0,484],
+  ["Hilti",10.40,12989.12,0,0,0,0,12999.52],
+  ["Ian Susi",0,2400,600,0,0,0,3000],
+  ["Impact Apprentices",0,0,0,-7580.76,-2693.13,0,-10273.89],
+  ["Kennards Hire",0,448,0,0,0,0,448],
+  ["KR Concepts",0,0,925.76,0,0,0,925.76],
+  ["Ladderworld",0,1190,0,0,0,0,1190],
+  ["Lawrence and Hanson - Coburg",14552.71,34101.93,74553.08,0,0,0,123207.72],
+  ["Lawrence and Hanson - Moorabbin",0,501.99,20364.18,0,0,0,20866.17],
+  ["Leading Edge Automation",0,9680,0,0,0,0,9680],
+  ["LG Group Civil",0,7612.53,0,0,0,0,7612.53],
+  ["MAG Apprenticeships",17103.59,35482.16,0,0,0,0,52585.75],
+  ["Mattronics",0,0,324.72,0,0,0,324.72],
+  ["MCS Concrete",0,0,13062.50,0,0,0,13062.50],
+  ["Melbourne Energy Group",0,42963.09,8658.56,0,0,0,51621.65],
+  ["Melbsat",0,1317.63,0,0,0,0,1317.63],
+  ["MIDDYS",19231.50,1435.93,3329.97,0,0,0,23997.40],
+  ["NAW Switchboards",113372.94,43593.12,55587.33,0,0,0,212553.39],
+  ["NECA",0,3310.64,0,0,0,0,3310.64],
+  ["NHP",8613.18,5535.75,0,0,0,0,14148.93],
+  ["Northside Technical Solutions Pty Ltd",0,10640.74,25730.10,0,0,0,36370.84],
+  ["O&M Manuals Pty Ltd",0,0,3041.50,0,0,0,3041.50],
+  ["On-Site Hearing",0,3130.88,0,0,0,0,3130.88],
+  ["Onebit",5289.37,105591.41,1812.97,0,0,0,112693.75],
+  ["Pacific Components",11358.58,13865.35,0,0,0,0,25223.93],
+  ["Polyplas",0,0,481.25,0,0,0,481.25],
+  ["ProBIM Pty Ltd",0,12655.50,6264.50,0,0,0,18920],
+  ["Q Industries",22875.14,19427.24,0,70025.27,0,0,112327.65],
+  ["Rainbow Plumbtec",8460.77,9076.38,26890.17,0,0,0,44427.32],
+  ["Regional Equip Hire",0,2776.73,1067.22,0,0,0,3843.95],
+  ["Rexel",0,448.14,0,0,0,0,448.14],
+  ["RMS Manufacturing",0,183271,0,0,0,0,183271],
+  ["Ryder Commerical",0,12258.90,0,0,0,0,12258.90],
+  ["S & R Foot Cable Hauling",6271.38,0,0,0,0,0,6271.38],
+  ["SCF",0,12640.32,5733.92,0,0,0,18374.24],
+  ["Simpro Software",0,1754.50,0,0,0,0,1754.50],
+  ["Site Safe",0,3222.71,2364.30,0,0,0,5587.01],
+  ["Soilworx",0,1961.31,-1582.03,0,0,0,379.28],
+  ["Spective",0,0,2750,0,0,0,2750],
+  ["Spiire",0,2261.88,0,0,0,0,2261.88],
+  ["Super City Concrete Cutting",0,0,2268.35,0,0,0,2268.35],
+  ["Supply Partners Pty Ltd",0,19135.82,0,0,0,0,19135.82],
+  ["The Co. Accountants & Business Advisors Pty Ltd",0,3850,581.90,0,0,0,4431.90],
+  ["Titan Containers",0,7177.87,0,0,0,0,7177.87],
+  ["Tradezone",0,124974.13,35316.05,0,0,0,160290.18],
+  ["Tricab",101190,44291.56,78673.18,0,0,0,224154.74],
+  ["United Forklift and Access Solutions",0,33449.98,28701.20,0,0,0,62151.18],
+  ["Urban Lighting Group",0,56626.90,12301.30,0,0,0,68928.20],
+  ["Urban Pineapple",0,0,0,-1467.34,0,0,-1467.34],
+  ["Vanguard Wireless",0,2783,0,0,0,0,2783],
+  ["Vic Sawing & Drilling",0,6545.33,5296.92,0,0,0,11842.25],
+  ["Visibuild",0,1980,660,0,0,0,2640],
+  ["Voltex",0,1825.82,0,0,0,0,1825.82],
+  ["Westberg Sheetmetal",0,1208.90,0,0,0,0,1208.90],
+  ["Woolpert Australia Pty Ltd",0,0,1188,0,0,0,1188],
+];
+
+// Sort by total desc for table
+const sorted = [...suppliers].sort((a,b) => Math.abs(b[7]) - Math.abs(a[7]));
+
+const tbody = document.getElementById('supplierTable');
+sorted.forEach(r => {
+  const hasOver2 = r[4] > 0 || r[5] > 0;
+  const hasOver1 = r[3] > 0;
+  const isCredit = r[7] < 0;
+  const totalClass = isCredit ? 'cell-credit' : hasOver2 ? 'cell-over2' : hasOver1 ? 'cell-over1' : '';
+
+  const cell3 = r[3] > 0 ? `<span class="cell-over1">$${r[3].toLocaleString('en-AU',{minimumFractionDigits:2})}</span>` : r[3] < 0 ? fmt(r[3]) : '<span class="cell-zero">—</span>';
+  const cell4 = r[4] > 0 ? `<span class="cell-over2">$${r[4].toLocaleString('en-AU',{minimumFractionDigits:2})}</span>` : r[4] < 0 ? fmt(r[4]) : '<span class="cell-zero">—</span>';
+  const cell5 = r[5] < 0 ? fmt(r[5]) : r[5] > 0 ? `<span class="cell-over2">$${r[5].toLocaleString('en-AU',{minimumFractionDigits:2})}</span>` : '<span class="cell-zero">—</span>';
+
+  tbody.innerHTML += `<tr>
+    <td>${r[0]}</td>
+    <td>${r[1]?'$'+r[1].toLocaleString('en-AU',{minimumFractionDigits:2}):'<span class="cell-zero">—</span>'}</td>
+    <td>${r[2]?'$'+r[2].toLocaleString('en-AU',{minimumFractionDigits:2}):'<span class="cell-zero">—</span>'}</td>
+    <td>${r[3]===0?'<span class="cell-zero">—</span>':cell3}</td>
+    <td>${r[4]===0?'<span class="cell-zero">—</span>':cell4}</td>
+    <td>${r[5]===0?'<span class="cell-zero">—</span>':cell5}</td>
+    <td class="${totalClass}">${isCredit?fmt(r[7]):'$'+r[7].toLocaleString('en-AU',{minimumFractionDigits:2})}</td>
+  </tr>`;
+});
+
+// DONUT CHART
+new Chart(document.getElementById('donutChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Current', '< 1 Month', '1 Month', '2 Months+'],
+    datasets: [{
+      data: [971139.31, 1321746.87, 778657.89, 86254.08],
+      backgroundColor: ['#107c10','#0078d4','#e8b84b','#d13438'],
+      borderWidth: 3,
+      borderColor: '#fff'
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom', labels: { font: { size: 11 }, padding: 12 } },
+      tooltip: {
+        callbacks: {
+          label: (c) => ' $' + c.raw.toLocaleString('en-AU', {minimumFractionDigits:0}) +
+            ' (' + ((c.raw/3157798)*100).toFixed(1) + '%)'
+        }
+      }
+    },
+    cutout: '62%'
+  }
+});
+
+// TOP SUPPLIERS CHART
+const top10 = [...suppliers].sort((a,b)=>b[7]-a[7]).slice(0,10);
+new Chart(document.getElementById('topSuppliersChart'), {
+  type: 'bar',
+  data: {
+    labels: top10.map(r => r[0].length > 22 ? r[0].substring(0,22)+'…' : r[0]),
+    datasets: [{
+      label: 'Total Outstanding',
+      data: top10.map(r => r[7]),
+      backgroundColor: top10.map(r => r[4]>0||r[5]>0 ? '#d13438' : r[3]>0 ? '#e8b84b' : '#0078d4'),
+      borderRadius: 3
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: { label: c => ' $' + c.raw.toLocaleString('en-AU',{minimumFractionDigits:0}) }
+      }
+    },
+    scales: {
+      x: {
+        ticks: {
+          callback: v => '$' + (v/1000).toFixed(0) + 'K',
+          font: { size: 10 }
+        },
+        grid: { color: '#f0f0f0' }
+      },
+      y: { ticks: { font: { size: 11 } } }
+    }
+  }
+});
+
+
+// OVERTIME HOURS CHART
+const otHoursLabels = ['Aston Craigieburn','Kennards Brunswick','BMEP','Kingston Aquatic','Punt Road Oval','Fountain Gate SC','Kennards Craigieburn','Stacked Farm','Kennards Cranbourne','Northside Electrical'];
+const otHoursData   = [89.5, 52.0, 33.0, 28.0, 26.0, 25.5, 22.5, 19.5, 8.5, 8.0];
+new Chart(document.getElementById('overtimeHoursChart'), {
+  type: 'bar',
+  data: {
+    labels: otHoursLabels,
+    datasets: [{
+      label: 'Overtime Hours',
+      data: otHoursData,
+      backgroundColor: otHoursData.map(v => v === Math.max(...otHoursData) ? '#d13438' : '#0078d4'),
+      borderRadius: 3
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: c => ' ' + c.raw + ' hrs' } }
+    },
+    scales: {
+      x: { ticks: { font: { size: 10 } }, grid: { color: '#f0f0f0' } },
+      y: { ticks: { font: { size: 11 } } }
+    }
+  }
+});
+
+// OVERTIME COST CHART
+const otCostLabels = ['Aston Craigieburn','Kennards Brunswick','BMEP','Kingston Aquatic','Fountain Gate SC','Kennards Craigieburn','Punt Road Oval','Stacked Farm','Kennards Cranbourne','Northside Electrical'];
+const otCostData   = [12235.15, 5936.10, 4133.82, 3636.38, 3520.92, 3260.25, 3233.43, 2042.32, 844.21, 791.04];
+new Chart(document.getElementById('overtimeCostChart'), {
+  type: 'bar',
+  data: {
+    labels: otCostLabels,
+    datasets: [{
+      label: 'Overtime Cost',
+      data: otCostData,
+      backgroundColor: otCostData.map(v => v === Math.max(...otCostData) ? '#d13438' : '#0078d4'),
+      borderRadius: 3
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: c => ' $' + c.raw.toLocaleString('en-AU', {minimumFractionDigits:2}) } }
+    },
+    scales: {
+      x: { ticks: { callback: v => '$' + (v/1000).toFixed(0) + 'K', font: { size: 10 } }, grid: { color: '#f0f0f0' } },
+      y: { ticks: { font: { size: 11 } } }
+    }
+  }
+});
+
+// RECEIVABLES WEEKLY CHART
+const recDates = [['Week 1', '7–13 Jul'], ['Week 2', '14–20 Jul'], ['Week 3', '21–27 Jul'], ['Week 4', '28 Jul–3 Aug']];
+const recAmounts = [2015192.82, 89614, 1043504.91, 667961.72];
+const recColors = ['#0078d4', '#e8b84b', '#0078d4', '#1a1a2e'];
+new Chart(document.getElementById('receivablesChart'), {
+  type: 'bar',
+  data: {
+    labels: recDates,
+    datasets: [{
+      label: 'Expected Cash',
+      data: recAmounts,
+      backgroundColor: recColors,
+      borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: c => ' $' + c.raw.toLocaleString('en-AU', {minimumFractionDigits: 0})
+        }
+      }
+    },
+    scales: {
+      y: {
+        ticks: { callback: v => '$' + (v/1000).toFixed(0) + 'K', font: { size: 10 } },
+        grid: { color: '#f0f0f0' }
+      },
+      x: { ticks: { font: { size: 11 } } }
+    }
+  }
+});
+</script>
+</body>
+</html>
