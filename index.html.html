@@ -144,7 +144,7 @@
     <h1>Management Report</h1>
     <div class="subtitle">Northside Electrical &nbsp;|&nbsp; Source: Xero Export</div>
   </div>
-  <div class="date-badge">As at July 2025</div>
+  <div class="date-badge">As at July 2026</div>
 </div>
 
 <div class="dashboard">
@@ -323,23 +323,23 @@
   <div class="kpi-row">
     <div class="kpi-card total">
       <div class="kpi-label">Total Payables</div>
-      <div class="kpi-value">$3.16M</div>
-      <div class="kpi-sub">88 suppliers</div>
+      <div class="kpi-value">$3.13M</div>
+      <div class="kpi-sub">85 suppliers</div>
     </div>
     <div class="kpi-card current">
       <div class="kpi-label">Current (Not Yet Due)</div>
-      <div class="kpi-value">$971K</div>
-      <div class="kpi-sub">30.7% of total</div>
+      <div class="kpi-value">$976K</div>
+      <div class="kpi-sub"> 31.2% of total</div>
     </div>
     <div class="kpi-card soon">
       <div class="kpi-label">Due &lt; 1 Month</div>
-      <div class="kpi-value">$1.32M</div>
-      <div class="kpi-sub">41.8% of total</div>
+      <div class="kpi-value">$1.30M</div>
+      <div class="kpi-sub"> 41.5% of total</div>
     </div>
     <div class="kpi-card overdue">
       <div class="kpi-label">Overdue 1M+</div>
-      <div class="kpi-value">$865K</div>
-      <div class="kpi-sub">27.4% of total · action required</div>
+      <div class="kpi-value">$856K</div>
+      <div class="kpi-sub"> 27.3% of total · action required</div>
     </div>
   </div>
 
@@ -562,12 +562,12 @@
         <tfoot>
           <tr>
             <td>TOTAL</td>
-            <td>$971,139</td>
-            <td>$1,321,747</td>
-            <td>$778,658</td>
+            <td>$975,570</td>
+            <td>$1,300,309</td>
+            <td>$769,431</td>
             <td>$88,947</td>
             <td>($2,693)</td>
-            <td>$3,157,798</td>
+            <td>$3,131,564</td>
           </tr>
         </tfoot>
       </table>
@@ -587,56 +587,55 @@ const fmt = (n) => {
 };
 
 const suppliers = [
-  ["1PD - 1 Point Distribution",0,6306.30,11944.46,0,0,0,18250.76],
+  ["1PD - 1 Point Distribution",168.85,6306.30,11944.46,0,0,0,18419.61],
   ["Active Elec Distrib",540265.26,0,294600.95,0,0,0,834866.21],
   ["Advanced Crane Trucks",0,0,1233.72,0,0,0,1233.72],
   ["All Trades",0,0,6670.18,0,0,0,6670.18],
   ["AWM",102544.49,12817.13,0,0,0,0,115361.62],
   ["Big Ideas Company",0,149.60,0,0,0,0,149.60],
   ["Bluebeam",0,12217.58,0,0,0,0,12217.58],
-  ["CBW Crane Hire & Rigging",0,16500,0,0,0,0,16500],
-  ["Chief Group Solutions",0,1716,0,0,0,0,1716],
+  ["Bluebottle",0,143.00,0,0,0,0,143.00],
+  ["CBW Crane Hire & Rigging",0,16500.00,0,0,0,0,16500.00],
+  ["Chief Group Solutions",0,1716.00,0,0,0,0,1716.00],
   ["Chief Group Solutions Pty Ltd",0,13312.75,25938.28,27539.60,0,0,66790.63],
-  ["Clifton McCorkell",0,1680,0,0,0,0,1680],
   ["Collective Crane Hire",0,9013.30,0,0,0,0,9013.30],
-  ["Country Victoria Electrical Inspections Pty Ltd",0,0,957,0,0,0,957],
-  ["CPS Plumbing",0,2860,0,0,0,0,2860],
-  ["CreditorWatch",0,385,0,0,0,0,385],
+  ["Country Victoria Electrical Inspections Pty Ltd",0,0,957.00,0,0,0,957.00],
+  ["CPS Plumbing",0,2860.00,0,0,0,0,2860.00],
+  ["CreditorWatch",0,385.00,0,0,0,0,385.00],
   ["CREFFIELD DIGITAL PRINT",0,1238.60,0,0,0,0,1238.60],
-  ["DC AUTOCARE",0,1696,0,0,0,0,1696],
+  ["DC AUTOCARE",0,1696.00,0,0,0,0,1696.00],
   ["DNN Australia",0,0,247.50,0,0,0,247.50],
-  ["DRC Switchboards",0,248290,0,0,0,0,248290],
-  ["EDCW",0,10329,0,0,0,0,10329],
+  ["DRC Switchboards",0,248290.00,0,0,0,0,248290.00],
+  ["EDCW",0,15259.75,0,0,0,0,15259.75],
   ["EIC - Electrical Inspection and Certification",0,302.50,0,0,0,0,302.50],
-  ["Elite Surveying",0,935,0,0,0,0,935],
+  ["Elite Surveying",0,935.00,0,0,0,0,935.00],
   ["EML Workcover",0,0,9473.99,0,0,0,9473.99],
   ["Epsom Hire",0,257.12,0,0,0,0,257.12],
   ["Errand Transport Services",0,1632.54,220.89,0,0,0,1853.43],
   ["Everlite",0,0,2746.02,0,0,0,2746.02],
   ["Fire Rating Solutions",0,11588.50,0,0,0,0,11588.50],
-  ["FM Group Civil Pty Ltd",0,0,7678,0,0,0,7678],
+  ["FM Group Civil Pty Ltd",0,0,7678.00,0,0,0,7678.00],
   ["FUJI XEROX",0,0,0,430.44,0,0,430.44],
   ["Gforce Employment",0,9243.13,0,0,0,0,9243.13],
   ["Google Workspace",0,1398.73,0,0,0,0,1398.73],
-  ["Grunt Invoice Protection",0,990,0,0,0,0,990],
+  ["Grunt Invoice Protection",0,990.00,0,0,0,0,990.00],
   ["Highbury Plumbing",0,55009.90,0,0,0,0,55009.90],
-  ["Hightower Concrete Cutter",0,484,0,0,0,0,484],
+  ["Hightower Concrete Cutter",0,484.00,0,0,0,0,484.00],
   ["Hilti",10.40,12989.12,0,0,0,0,12999.52],
-  ["Ian Susi",0,2400,600,0,0,0,3000],
   ["Impact Apprentices",0,0,0,-7580.76,-2693.13,0,-10273.89],
-  ["Kennards Hire",0,448,0,0,0,0,448],
+  ["Kennards Hire",0,448.00,0,0,0,0,448.00],
   ["KR Concepts",0,0,925.76,0,0,0,925.76],
-  ["Ladderworld",0,1190,0,0,0,0,1190],
+  ["Ladderworld",0,1190.00,0,0,0,0,1190.00],
   ["Lawrence and Hanson - Coburg",14552.71,34101.93,74553.08,0,0,0,123207.72],
   ["Lawrence and Hanson - Moorabbin",0,501.99,20364.18,0,0,0,20866.17],
-  ["Leading Edge Automation",0,9680,0,0,0,0,9680],
+  ["Leading Edge Automation",0,9680.00,0,0,0,0,9680.00],
   ["LG Group Civil",0,7612.53,0,0,0,0,7612.53],
   ["MAG Apprenticeships",17103.59,35482.16,0,0,0,0,52585.75],
   ["Mattronics",0,0,324.72,0,0,0,324.72],
   ["MCS Concrete",0,0,13062.50,0,0,0,13062.50],
   ["Melbourne Energy Group",0,42963.09,8658.56,0,0,0,51621.65],
   ["Melbsat",0,1317.63,0,0,0,0,1317.63],
-  ["MIDDYS",19231.50,1435.93,3329.97,0,0,0,23997.40],
+  ["Middendorp Electrical Co. Pty Ltd",19231.50,1435.93,0,0,0,0,20667.43],
   ["NAW Switchboards",113372.94,43593.12,55587.33,0,0,0,212553.39],
   ["NECA",0,3310.64,0,0,0,0,3310.64],
   ["NHP",8613.18,5535.75,0,0,0,0,14148.93],
@@ -646,35 +645,34 @@ const suppliers = [
   ["Onebit",5289.37,105591.41,1812.97,0,0,0,112693.75],
   ["Pacific Components",11358.58,13865.35,0,0,0,0,25223.93],
   ["Polyplas",0,0,481.25,0,0,0,481.25],
-  ["ProBIM Pty Ltd",0,12655.50,6264.50,0,0,0,18920],
+  ["ProBIM Pty Ltd",0,12655.50,6264.50,0,0,0,18920.00],
   ["Q Industries",22875.14,19427.24,0,70025.27,0,0,112327.65],
   ["Rainbow Plumbtec",8460.77,9076.38,26890.17,0,0,0,44427.32],
   ["Regional Equip Hire",0,2776.73,1067.22,0,0,0,3843.95],
   ["Rexel",0,448.14,0,0,0,0,448.14],
-  ["RMS Manufacturing",0,183271,0,0,0,0,183271],
-  ["Ryder Commerical",0,12258.90,0,0,0,0,12258.90],
+  ["RMS Manufacturing",0,183271.00,0,0,0,0,183271.00],
   ["S & R Foot Cable Hauling",6271.38,0,0,0,0,0,6271.38],
   ["SCF",0,12640.32,5733.92,0,0,0,18374.24],
   ["Simpro Software",0,1754.50,0,0,0,0,1754.50],
   ["Site Safe",0,3222.71,2364.30,0,0,0,5587.01],
   ["Soilworx",0,1961.31,-1582.03,0,0,0,379.28],
-  ["Spective",0,0,2750,0,0,0,2750],
+  ["Spective",0,0,2750.00,0,0,0,2750.00],
   ["Spiire",0,2261.88,0,0,0,0,2261.88],
   ["Super City Concrete Cutting",0,0,2268.35,0,0,0,2268.35],
-  ["Supply Partners Pty Ltd",0,19135.82,0,0,0,0,19135.82],
-  ["The Co. Accountants & Business Advisors Pty Ltd",0,3850,581.90,0,0,0,4431.90],
+  ["Supply Partners Pty Ltd",0,9567.91,0,0,0,0,9567.91],
+  ["The Co. Accountants & Business Advisors Pty Ltd",0,3850.00,581.90,0,0,0,4431.90],
   ["Titan Containers",0,7177.87,0,0,0,0,7177.87],
   ["Tradezone",0,124974.13,35316.05,0,0,0,160290.18],
-  ["Tricab",101190,44291.56,78673.18,0,0,0,224154.74],
+  ["Tricab",101190.00,44291.56,78673.18,0,0,0,224154.74],
   ["United Forklift and Access Solutions",0,33449.98,28701.20,0,0,0,62151.18],
-  ["Urban Lighting Group",0,56626.90,12301.30,0,0,0,68928.20],
+  ["Urban Lighting Group",4261.40,56626.90,12301.30,0,0,0,73189.60],
   ["Urban Pineapple",0,0,0,-1467.34,0,0,-1467.34],
-  ["Vanguard Wireless",0,2783,0,0,0,0,2783],
-  ["Vic Sawing & Drilling",0,6545.33,5296.92,0,0,0,11842.25],
-  ["Visibuild",0,1980,660,0,0,0,2640],
+  ["Vanguard Wireless",0,2783.00,0,0,0,0,2783.00],
+  ["Vic Sawing & Drilling",0,6545.33,0,0,0,0,6545.33],
+  ["Visibuild",0,1980.00,660.00,0,0,0,2640.00],
   ["Voltex",0,1825.82,0,0,0,0,1825.82],
-  ["Westberg Sheetmetal",0,1208.90,0,0,0,0,1208.90],
-  ["Woolpert Australia Pty Ltd",0,0,1188,0,0,0,1188],
+  ["Westberg Sheetmetal",0,604.45,0,0,0,0,604.45],
+  ["Woolpert Australia Pty Ltd",0,0,1188.00,0,0,0,1188.00],
 ];
 
 // Sort by total desc for table
@@ -708,7 +706,7 @@ new Chart(document.getElementById('donutChart'), {
   data: {
     labels: ['Current', '< 1 Month', '1 Month', '2 Months+'],
     datasets: [{
-      data: [971139.31, 1321746.87, 778657.89, 86254.08],
+      data: [975569.56, 1300309.36, 769431.00, 86254.08],
       backgroundColor: ['#107c10','#0078d4','#e8b84b','#d13438'],
       borderWidth: 3,
       borderColor: '#fff'
@@ -722,7 +720,7 @@ new Chart(document.getElementById('donutChart'), {
       tooltip: {
         callbacks: {
           label: (c) => ' $' + c.raw.toLocaleString('en-AU', {minimumFractionDigits:0}) +
-            ' (' + ((c.raw/3157798)*100).toFixed(1) + '%)'
+            ' (' + ((c.raw/3131564)*100).toFixed(1) + '%)'
         }
       }
     },
