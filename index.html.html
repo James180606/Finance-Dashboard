@@ -442,11 +442,12 @@
         <thead>
           <tr>
             <th>Supplier</th>
-            <th>Current</th>
-            <th>Jul 2026</th>
-            <th>Jun 2026</th>
-            <th>May 2026</th>
             <th>Apr 2026</th>
+            <th>May 2026</th>
+            <th>Jun 2026</th>
+            <th>Jul 2026</th>
+            <th>Aug 2026</th>
+            <th>Sep 2026</th>
             <th>Total</th>
           </tr>
         </thead>
@@ -454,11 +455,12 @@
         <tfoot>
           <tr>
             <td>TOTAL</td>
-            <td>$975,570</td>
-            <td>$1,300,309</td>
-            <td>$769,431</td>
-            <td>$88,947</td>
             <td>($2,693)</td>
+            <td>$88,947</td>
+            <td>$769,431</td>
+            <td>$1,300,309</td>
+            <td>$975,570</td>
+            <td>—</td>
             <td>$3,131,564</td>
           </tr>
         </tfoot>
@@ -577,17 +579,18 @@ sorted.forEach(r => {
   const isCredit = r[7] < 0;
   const totalClass = isCredit ? 'cell-credit' : hasOver2 ? 'cell-over2' : hasOver1 ? 'cell-over1' : '';
 
-  const cell3 = r[3] > 0 ? `<span class="cell-over1">$${r[3].toLocaleString('en-AU',{minimumFractionDigits:2})}</span>` : r[3] < 0 ? fmt(r[3]) : '<span class="cell-zero">—</span>';
-  const cell4 = r[4] > 0 ? `<span class="cell-over2">$${r[4].toLocaleString('en-AU',{minimumFractionDigits:2})}</span>` : r[4] < 0 ? fmt(r[4]) : '<span class="cell-zero">—</span>';
-  const cell5 = r[5] < 0 ? fmt(r[5]) : r[5] > 0 ? `<span class="cell-over2">$${r[5].toLocaleString('en-AU',{minimumFractionDigits:2})}</span>` : '<span class="cell-zero">—</span>';
+  const cellApr = r[5] < 0 ? fmt(r[5]) : r[5] > 0 ? `<span class="cell-over2">$${r[5].toLocaleString('en-AU',{minimumFractionDigits:2})}</span>` : '<span class="cell-zero">—</span>';
+  const cellMay = r[4] > 0 ? `<span class="cell-over2">$${r[4].toLocaleString('en-AU',{minimumFractionDigits:2})}</span>` : r[4] < 0 ? fmt(r[4]) : '<span class="cell-zero">—</span>';
+  const cellJun = r[3] > 0 ? `<span class="cell-over1">$${r[3].toLocaleString('en-AU',{minimumFractionDigits:2})}</span>` : r[3] < 0 ? fmt(r[3]) : '<span class="cell-zero">—</span>';
 
   tbody.innerHTML += `<tr>
     <td>${r[0]}</td>
-    <td>${r[1]?'$'+r[1].toLocaleString('en-AU',{minimumFractionDigits:2}):'<span class="cell-zero">—</span>'}</td>
+    <td>${r[5]===0?'<span class="cell-zero">—</span>':cellApr}</td>
+    <td>${r[4]===0?'<span class="cell-zero">—</span>':cellMay}</td>
+    <td>${r[3]===0?'<span class="cell-zero">—</span>':cellJun}</td>
     <td>${r[2]?'$'+r[2].toLocaleString('en-AU',{minimumFractionDigits:2}):'<span class="cell-zero">—</span>'}</td>
-    <td>${r[3]===0?'<span class="cell-zero">—</span>':cell3}</td>
-    <td>${r[4]===0?'<span class="cell-zero">—</span>':cell4}</td>
-    <td>${r[5]===0?'<span class="cell-zero">—</span>':cell5}</td>
+    <td>${r[1]?'$'+r[1].toLocaleString('en-AU',{minimumFractionDigits:2}):'<span class="cell-zero">—</span>'}</td>
+    <td><span class="cell-zero">—</span></td>
     <td class="${totalClass}">${isCredit?fmt(r[7]):'$'+r[7].toLocaleString('en-AU',{minimumFractionDigits:2})}</td>
   </tr>`;
 });
@@ -715,6 +718,7 @@ new Chart(document.getElementById('receivablesChart'), {
 </script>
 </body>
 </html>
+
 
 
 
