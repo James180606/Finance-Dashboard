@@ -447,6 +447,8 @@
             <th>Jun 2026</th>
             <th>May 2026</th>
             <th>Apr 2026</th>
+            <th>Aug 2026</th>
+            <th>Sep 2026</th>
             <th>Total</th>
           </tr>
         </thead>
@@ -459,6 +461,8 @@
             <td>$769,431</td>
             <td>$88,947</td>
             <td>($2,693)</td>
+            <td>—</td>
+            <td>—</td>
             <td>$3,131,564</td>
           </tr>
         </tfoot>
@@ -588,6 +592,8 @@ sorted.forEach(r => {
     <td>${r[3]===0?'<span class="cell-zero">—</span>':cell3}</td>
     <td>${r[4]===0?'<span class="cell-zero">—</span>':cell4}</td>
     <td>${r[5]===0?'<span class="cell-zero">—</span>':cell5}</td>
+    <td><span class="cell-zero">—</span></td>
+    <td><span class="cell-zero">—</span></td>
     <td class="${totalClass}">${isCredit?fmt(r[7]):'$'+r[7].toLocaleString('en-AU',{minimumFractionDigits:2})}</td>
   </tr>`;
 });
@@ -715,6 +721,7 @@ new Chart(document.getElementById('receivablesChart'), {
 </script>
 </body>
 </html>
+
 
 
 
