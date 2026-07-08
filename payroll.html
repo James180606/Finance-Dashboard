@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payroll Dashboard v2 — Northside Electrical Contractors</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #eef0f3; color: #1c1c1e; font-size: 13px; line-height: 1.4; }
+
+/* ── HEADER ── */
+.header { background: #0f2942; color: #fff; padding: 0 32px; display: flex; align-items: stretch; gap: 0; }
+.header-brand { padding: 18px 0; flex: 1; }
+.header-brand h1 { font-size: 17px; font-weight: 700; letter-spacing: -.2px; }
+.header-brand p  { font-size: 11px; opacity: .6; margin-top: 3px; }
+.header-meta { display: flex; align-items: center; gap: 32px; padding: 0 32px; border-left: 1px solid rgba(255,255,255,.1); }
+.header-pill { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); border-radius: 20px; padding: 5px 14px; font-size: 11px; color: rgba(255,255,255,.8); white-space: nowrap; }
+.header-status { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600; }
+.status-dot { width: 9px; height: 9px; border-radius: 50%; background: #30c85e; box-shadow: 0 0 0 3px rgba(48,200,94,.25); }
+
+/* ── LAYOUT ── */
+.page { max-width: 1380px; margin: 0 auto; padding: 22px 28px 32px; }
+.section-hd { display: flex; align-items: center; gap: 10px; margin: 22px 0 10px; }
+.section-hd span { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .9px; color: #0078D4; }
+.section-hd::after { content: ''; flex: 1; height: 1px; background: #dde1e7; }
+.col2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.col3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.col-6040 { display: grid; grid-template-columns: 3fr 2fr; gap: 14px; }
+
+/* ── CARDS ── */
+.card { background: #fff; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,.07), 0 1px 8px rgba(0,0,0,.04); padding: 18px 20px; margin-bottom: 0; }
+.card-hd { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #555; margin-bottom: 14px; display: flex; align-items: baseline; gap: 8px; }
+.card-hd-sub { font-size: 11px; font-weight: 400; text-transform: none; color: #aaa; letter-spacing: 0; }
+
+/* ── KPI CARDS ── */
+.kpi-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 12px; margin-bottom: 12px; }
+.kpi { background: #fff; border-radius: 10px; padding: 16px 18px; box-shadow: 0 1px 3px rgba(0,0,0,.07), 0 1px 8px rgba(0,0,0,.04); position: relative; overflow: hidden; }
+.kpi::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #0078D4; border-radius: 10px 10px 0 0; }
+.kpi.k-red::after   { background: #d13438; }
+.kpi.k-green::after { background: #107C10; }
+.kpi.k-amber::after { background: #c47800; }
+.kpi.k-purple::after { background: #6b21a8; }
+.kpi-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px; color: #777; margin-bottom: 6px; }
+.kpi-val { font-size: 26px; font-weight: 700; line-height: 1; color: #111; }
+.kpi-sub { font-size: 11px; margin-top: 5px; color: #999; }
+.kpi-delta { font-size: 11px; font-weight: 600; margin-top: 5px; }
+.pos { color: #107C10; } .neg { color: #d13438; } .neu { color: #999; }
+
+/* ── APPROVAL STRIP ── */
+.appr-strip { background: #fff; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,.07); padding: 14px 22px; display: flex; align-items: center; gap: 0; margin-bottom: 12px; }
+.appr-item { display: flex; align-items: center; gap: 9px; padding: 0 24px; border-right: 1px solid #eee; }
+.appr-item:first-child { padding-left: 0; }
+.appr-item:last-of-type { border-right: none; }
+.appr-check { width: 22px; height: 22px; border-radius: 50%; background: #e8f5e9; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #107C10; font-weight: 700; flex-shrink: 0; }
+.appr-text .appr-lbl { font-size: 10px; color: #aaa; text-transform: uppercase; letter-spacing: .5px; }
+.appr-text .appr-val { font-size: 12px; font-weight: 700; color: #107C10; }
+.appr-reviewer { margin-left: auto; text-align: right; font-size: 12px; }
+.appr-reviewer strong { display: block; color: #333; }
+.appr-reviewer span { color: #aaa; font-size: 11px; }
+
+/* ── TABLES ── */
+table { width: 100%; border-collapse: collapse; }
+th { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #aaa; padding: 7px 10px; border-bottom: 1.5px solid #f0f0f0; text-align: left; white-space: nowrap; }
+th.r { text-align: right; }
+td { padding: 7px 10px; border-bottom: 1px solid #f7f7f7; vertical-align: middle; font-size: 12px; }
+td.r { text-align: right; font-variant-numeric: tabular-nums; }
+tr:last-child td { border-bottom: none; }
+tfoot td { border-top: 1.5px solid #e8e8e8; font-weight: 700; border-bottom: none; font-size: 12px; }
+tbody tr:hover { background: #fafbfc !important; }
+
+/* ── BADGES ── */
+.badge { display: inline-flex; align-items: center; padding: 2px 9px; border-radius: 20px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+.bg  { background: #e6f4ea; color: #1a6b2a; }
+.br  { background: #fde8e8; color: #9e1b1b; }
+.ba  { background: #fef3e2; color: #9a5700; }
+.bgy { background: #f0f0f0; color: #555; }
+.bb  { background: #e3f0ff; color: #0050a0; }
+
+/* ── COMMENTARY ── */
+.commentary { background: #f5f8ff; border-left: 3px solid #0078D4; border-radius: 0 8px 8px 0; padding: 13px 16px; font-size: 13px; line-height: 1.65; color: #333; }
+
+/* ── RECON SUMMARY ── */
+.recon-tiles { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 16px; }
+.rtile { background: #f7f8fa; border-radius: 8px; padding: 13px 14px; text-align: center; }
+.rtile-num { font-size: 28px; font-weight: 700; line-height: 1; }
+.rtile-lbl { font-size: 10px; color: #999; margin-top: 4px; }
+.rate-bar-wrap { margin: 4px 0 16px; }
+.rate-bar-bg { height: 7px; background: #eee; border-radius: 4px; overflow: hidden; }
+.rate-bar-fg { height: 100%; background: linear-gradient(90deg, #107C10, #30c85e); border-radius: 4px; }
+.rate-bar-lbl { display: flex; justify-content: space-between; font-size: 10px; color: #aaa; margin-top: 4px; }
+
+/* ── COMPONENT BARS ── */
+.comp-bar-bg { height: 5px; background: #eee; border-radius: 3px; margin-top: 5px; overflow: hidden; }
+.comp-bar-fg { height: 100%; border-radius: 3px; }
+
+/* ── WOW GRID ── */
+.wow-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+.wow-item { background: #f7f8fa; border-radius: 8px; padding: 13px 16px; }
+.wow-lbl  { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: #999; }
+.wow-prev { font-size: 11px; color: #c0c0c0; margin-top: 3px; }
+.wow-curr { font-size: 20px; font-weight: 700; margin-top: 3px; color: #111; }
+.wow-delta { font-size: 11px; font-weight: 600; margin-top: 4px; }
+
+/* ── RISK FLAGS ── */
+.risk-item { display: flex; gap: 13px; padding: 10px 0; border-bottom: 1px solid #f2f2f2; align-items: flex-start; }
+.risk-item:last-child { border-bottom: none; padding-bottom: 0; }
+.risk-icon { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+.ri-red   { background: #fde8e8; color: #d13438; }
+.ri-amber { background: #fef3e2; color: #c47800; }
+.risk-body .risk-title { font-size: 12px; font-weight: 600; color: #222; }
+.risk-body .risk-detail { font-size: 11px; color: #888; margin-top: 2px; }
+
+/* ── LOC TABLE OT BAR ── */
+.ot-bar-cell { display: flex; align-items: center; gap: 8px; }
+.ot-bar-bg { width: 60px; height: 5px; background: #eee; border-radius: 3px; overflow: hidden; flex-shrink: 0; }
+.ot-bar-fg { height: 100%; border-radius: 3px; }
+.ot-cell-red { color: #d13438; font-weight: 700; }
+.ot-cell-amber { color: #c47800; font-weight: 600; }
+.loc-top { font-weight: 700; }
+
+/* ── EXCEPTION TABLE ── */
+.exc-material { color: #d13438; font-size: 10px; font-weight: 700; }
+.var-neg { color: #d13438; font-weight: 700; }
+.var-pos { color: #107C10; font-weight: 700; }
+
+/* ── FOOTER ── */
+.footer { text-align: center; font-size: 11px; color: #bbb; padding: 24px; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-brand">
+    <h1>Northside Electrical Contractors</h1>
+    <p>Weekly Workforce &amp; Payroll Dashboard &nbsp;&middot;&nbsp; Version 2</p>
+  </div>
+  <div class="header-meta">
+    <div class="header-pill">22 Jun &ndash; 28 Jun 2026</div>
+    <div class="header-status">
+      <div class="status-dot"></div>
+      <span style="color:rgba(255,255,255,.85);">All Clear &mdash; Ready for Approval</span>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- KPIs -->
+  <div class="section-hd"><span>Payroll Summary</span></div>
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-lbl">Employees Paid</div>
+      <div class="kpi-val">73</div>
+      <div class="kpi-sub neu">All active employees</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">Approved Hours</div>
+      <div class="kpi-val">2,401.5</div>
+      <div class="kpi-delta neg">&#8595; 507.0 vs prior week</div>
+    </div>
+    <div class="kpi k-amber">
+      <div class="kpi-lbl">Hours Variance</div>
+      <div class="kpi-val" style="color:#c47800;">(48.4)</div>
+      <div class="kpi-sub">Paid 2,449.9 hrs</div>
+    </div>
+    <div class="kpi k-green">
+      <div class="kpi-lbl">Gross Payroll</div>
+      <div class="kpi-val">$245,158</div>
+      <div class="kpi-delta neg">&#8593; $16,506 vs prior</div>
+    </div>
+    <div class="kpi k-amber">
+      <div class="kpi-lbl">Overtime Hours</div>
+      <div class="kpi-val">419.0</div>
+      <div class="kpi-delta neg">&#8593; 102.5 hrs vs prior</div>
+    </div>
+    <div class="kpi k-red">
+      <div class="kpi-lbl">Exceptions</div>
+      <div class="kpi-val">7</div>
+      <div class="kpi-sub">All acknowledged &#10003;</div>
+    </div>
+  </div>
+
+  <!-- APPROVAL -->
+  <div class="appr-strip">
+    <div class="appr-item">
+      <div class="appr-check">&#10003;</div>
+      <div class="appr-text">
+        <div class="appr-lbl">Payroll Reconciled</div>
+        <div class="appr-val">Yes</div>
+      </div>
+    </div>
+    <div class="appr-item">
+      <div class="appr-check">&#10003;</div>
+      <div class="appr-text">
+        <div class="appr-lbl">Exceptions Reviewed</div>
+        <div class="appr-val">Yes</div>
+      </div>
+    </div>
+    <div class="appr-item">
+      <div class="appr-check">&#10003;</div>
+      <div class="appr-text">
+        <div class="appr-lbl">Overtime Reviewed</div>
+        <div class="appr-val">Yes</div>
+      </div>
+    </div>
+    <div class="appr-item">
+      <div class="appr-check">&#10003;</div>
+      <div class="appr-text">
+        <div class="appr-lbl">Payroll Approved</div>
+        <div class="appr-val">Yes</div>
+      </div>
+    </div>
+    <div class="appr-reviewer">
+      <strong>John Pearson</strong>
+      <span>Reviewed 01 Jul 2026</span>
+    </div>
+  </div>
+
+  <!-- COMMENTARY + WOW -->
+  <div class="section-hd"><span>Commentary &amp; Week-on-Week</span></div>
+  <div class="col-6040" style="margin-bottom:12px;">
+    <div class="card">
+      <div class="card-hd">Executive Commentary</div>
+      <div class="commentary">Payroll reconciled &mdash; all exceptions reviewed and acknowledged for the week ending 28 June 2026. 7 review item(s) were identified &mdash; all have been acknowledged. Payroll is clear for approval. Fountain Gate Super Centre recorded the highest overtime utilisation at 114.0 hours ($15,962), representing the largest labour pressure point for the week. No missing payroll records or unusual payroll transactions were identified.</div>
+    </div>
+    <div class="card">
+      <div class="card-hd">Prior Week <span class="card-hd-sub">15–21 Jun 2026</span></div>
+      <div class="wow-grid" style="grid-template-columns:1fr 1fr;">
+        <div class="wow-item">
+          <div class="wow-lbl">Gross Payroll</div>
+          <div class="wow-prev">Prior: $228,652</div>
+          <div class="wow-curr">$245,158</div>
+          <div class="wow-delta neg">&#8593; +$16,506 <span style="font-weight:400;color:#bbb;">(+7.2%)</span></div>
+        </div>
+        <div class="wow-item">
+          <div class="wow-lbl">OT Hours</div>
+          <div class="wow-prev">Prior: 316.5 hrs</div>
+          <div class="wow-curr">419.0</div>
+          <div class="wow-delta neg">&#8593; +102.5 <span style="font-weight:400;color:#bbb;">(+32.4%)</span></div>
+        </div>
+        <div class="wow-item">
+          <div class="wow-lbl">OT Cost</div>
+          <div class="wow-prev">Prior: $40,208</div>
+          <div class="wow-curr">$56,415</div>
+          <div class="wow-delta neg">&#8593; +$16,207 <span style="font-weight:400;color:#bbb;">(+40.3%)</span></div>
+        </div>
+        <div class="wow-item">
+          <div class="wow-lbl">Travel Cost</div>
+          <div class="wow-prev">Prior: $13,280</div>
+          <div class="wow-curr">$12,449</div>
+          <div class="wow-delta pos">&#8595; &minus;$831 <span style="font-weight:400;color:#bbb;">(&minus;6.3%)</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPONENTS + RECONCILIATION -->
+  <div class="section-hd"><span>Payroll Composition &amp; Reconciliation</span></div>
+  <div class="col2" style="margin-bottom:12px;">
+    <div class="card">
+      <div class="card-hd">Payroll Component Breakdown <span class="card-hd-sub">by payment type</span></div>
+      <table>
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th class="r">Hours</th>
+            <th class="r">Earnings</th>
+            <th class="r">% of Gross</th>
+            <th style="width:80px;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Ordinary</td>
+            <td class="r">2,124.0</td>
+            <td class="r">$138,114.51</td>
+            <td class="r">56.3%</td>
+            <td><div class="comp-bar-bg"><div class="comp-bar-fg" style="width:56.3%;background:#0078D4;"></div></div></td>
+          </tr>
+          <tr style="background:#fff8f8;">
+            <td><strong>Overtime</strong></td>
+            <td class="r"><strong>419.0</strong></td>
+            <td class="r"><strong>$56,414.78</strong></td>
+            <td class="r"><strong style="color:#d13438;">23.0%</strong></td>
+            <td><div class="comp-bar-bg"><div class="comp-bar-fg" style="width:23%;background:#d13438;"></div></div></td>
+          </tr>
+          <tr>
+            <td>Leave</td>
+            <td class="r">344.8</td>
+            <td class="r">$13,346.75</td>
+            <td class="r">5.4%</td>
+            <td><div class="comp-bar-bg"><div class="comp-bar-fg" style="width:5.4%;background:#107C10;"></div></div></td>
+          </tr>
+          <tr>
+            <td>Travel</td>
+            <td class="r">906.0</td>
+            <td class="r">$12,449.05</td>
+            <td class="r">5.1%</td>
+            <td><div class="comp-bar-bg"><div class="comp-bar-fg" style="width:5.1%;background:#c47800;"></div></div></td>
+          </tr>
+          <tr>
+            <td>RDO</td>
+            <td class="r">181.9</td>
+            <td class="r">$11,259.69</td>
+            <td class="r">4.6%</td>
+            <td><div class="comp-bar-bg"><div class="comp-bar-fg" style="width:4.6%;background:#6b21a8;"></div></div></td>
+          </tr>
+          <tr>
+            <td>Site Allowance</td>
+            <td class="r">2,086.0</td>
+            <td class="r">$10,259.26</td>
+            <td class="r">4.2%</td>
+            <td><div class="comp-bar-bg"><div class="comp-bar-fg" style="width:4.2%;background:#555;"></div></div></td>
+          </tr>
+          <tr>
+            <td>Reimbursement</td>
+            <td class="r">14.0</td>
+            <td class="r">$1,777.59</td>
+            <td class="r">0.7%</td>
+            <td><div class="comp-bar-bg"><div class="comp-bar-fg" style="width:0.7%;background:#aaa;"></div></div></td>
+          </tr>
+          <tr>
+            <td>Other Allowance</td>
+            <td class="r">94.0</td>
+            <td class="r">$1,536.26</td>
+            <td class="r">0.6%</td>
+            <td><div class="comp-bar-bg"><div class="comp-bar-fg" style="width:0.6%;background:#aaa;"></div></div></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>Gross Total</td>
+            <td class="r">&mdash;</td>
+            <td class="r">$245,158.00</td>
+            <td class="r">100%</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-hd">Reconciliation Summary</div>
+      <div class="recon-tiles">
+        <div class="rtile">
+          <div class="rtile-num">63</div>
+          <div class="rtile-lbl">Workforce Employees</div>
+        </div>
+        <div class="rtile">
+          <div class="rtile-num" style="color:#107C10;">56</div>
+          <div class="rtile-lbl">Reconciled</div>
+        </div>
+        <div class="rtile">
+          <div class="rtile-num" style="color:#d13438;">7</div>
+          <div class="rtile-lbl">Review Required</div>
+        </div>
+        <div class="rtile">
+          <div class="rtile-num" style="color:#c47800;">88.9%</div>
+          <div class="rtile-lbl">Reconciliation Rate</div>
+        </div>
+      </div>
+      <div class="rate-bar-wrap">
+        <div class="rate-bar-bg"><div class="rate-bar-fg" style="width:88.9%;"></div></div>
+        <div class="rate-bar-lbl"><span>0%</span><span style="color:#c47800;font-weight:600;">88.9% reconciled</span><span>100%</span></div>
+      </div>
+
+      <div class="card-hd" style="margin-top:2px;">Exception Breakdown</div>
+      <table>
+        <thead>
+          <tr><th>Exception Category</th><th class="r">Count</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Hours Variance</td>
+            <td class="r"><span class="badge br">3</span></td>
+          </tr>
+          <tr>
+            <td>Excessive Overtime</td>
+            <td class="r"><span class="badge ba">4</span></td>
+          </tr>
+          <tr>
+            <td>Missing Payroll Records</td>
+            <td class="r"><span class="badge bg">0</span></td>
+          </tr>
+          <tr>
+            <td>Missing Timesheet Records</td>
+            <td class="r"><span class="badge bg">0</span></td>
+          </tr>
+          <tr>
+            <td>Other Exception Types</td>
+            <td class="r"><span class="badge bg">0</span></td>
+          </tr>
+          <tr style="background:#fff8f8;">
+            <td>&#8627;&nbsp;of which Material</td>
+            <td class="r"><span class="badge br">3</span></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr><td>Total Distinct Exceptions</td><td class="r">7</td></tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- EXCEPTION REGISTER -->
+  <div class="section-hd"><span>Exception Register</span></div>
+  <div class="card" style="margin-bottom:12px;">
+    <div class="card-hd">Payroll Exceptions &mdash; Week Ending 28 Jun 2026 <span class="card-hd-sub">7 items &middot; all acknowledged &middot; ready for approval</span></div>
+    <table>
+      <thead>
+        <tr>
+          <th>Employee</th>
+          <th>Category</th>
+          <th class="r">Approved Hrs</th>
+          <th class="r">Paid Hrs</th>
+          <th class="r">Variance</th>
+          <th>Material?</th>
+          <th>Exception Type</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:#fdf5f5;">
+          <td><strong style="color:#d13438;">Connor Shea</strong></td>
+          <td>Workforce</td>
+          <td class="r">41.5</td>
+          <td class="r">101.2</td>
+          <td class="r var-neg">(59.7)</td>
+          <td><span class="badge br">Yes</span></td>
+          <td>Hours Variance</td>
+          <td><span class="badge bg">Acknowledged</span></td>
+        </tr>
+        <tr>
+          <td><strong>David Olsen</strong></td>
+          <td>Workforce</td>
+          <td class="r">52.5</td>
+          <td class="r">52.5</td>
+          <td class="r" style="color:#aaa;">&mdash;</td>
+          <td><span class="badge bgy">No</span></td>
+          <td>Excessive Overtime</td>
+          <td><span class="badge bg">Acknowledged</span></td>
+        </tr>
+        <tr style="background:#fdf5f5;">
+          <td><strong style="color:#d13438;">India Wren</strong></td>
+          <td>Workforce</td>
+          <td class="r">35.0</td>
+          <td class="r">47.8</td>
+          <td class="r var-neg">(12.8)</td>
+          <td><span class="badge br">Yes</span></td>
+          <td>Hours Variance</td>
+          <td><span class="badge bg">Acknowledged</span></td>
+        </tr>
+        <tr>
+          <td><strong>Lucas Aquilina</strong></td>
+          <td>Workforce</td>
+          <td class="r">50.0</td>
+          <td class="r">50.0</td>
+          <td class="r" style="color:#aaa;">&mdash;</td>
+          <td><span class="badge bgy">No</span></td>
+          <td>Excessive Overtime</td>
+          <td><span class="badge bg">Acknowledged</span></td>
+        </tr>
+        <tr style="background:#fdf5f5;">
+          <td><strong style="color:#d13438;">Nicholas Karakyriakos</strong></td>
+          <td>Workforce</td>
+          <td class="r">32.0</td>
+          <td class="r">8.0</td>
+          <td class="r var-pos">24.0</td>
+          <td><span class="badge br">Yes</span></td>
+          <td>Hours Variance</td>
+          <td><span class="badge bg">Acknowledged</span></td>
+        </tr>
+        <tr>
+          <td><strong>Oscar Hambidge</strong></td>
+          <td>Workforce</td>
+          <td class="r">50.0</td>
+          <td class="r">50.0</td>
+          <td class="r" style="color:#aaa;">&mdash;</td>
+          <td><span class="badge bgy">No</span></td>
+          <td>Excessive Overtime</td>
+          <td><span class="badge bg">Acknowledged</span></td>
+        </tr>
+        <tr>
+          <td><strong>Stephen Cocks</strong></td>
+          <td>Workforce</td>
+          <td class="r">52.5</td>
+          <td class="r">52.5</td>
+          <td class="r" style="color:#aaa;">&mdash;</td>
+          <td><span class="badge bgy">No</span></td>
+          <td>Excessive Overtime</td>
+          <td><span class="badge bg">Acknowledged</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:11px;color:#bbb;margin-top:10px;">Note: an employee may appear in more than one exception category. Total distinct count: 7. Acknowledged: 7 of 7.</p>
+  </div>
+
+  <!-- LOCATION ANALYSIS -->
+  <div class="section-hd"><span>Location Analysis</span></div>
+  <div class="card" style="margin-bottom:12px;">
+    <div class="card-hd">Labour by Project / Location <span class="card-hd-sub">active locations this period &middot; ranked by overtime hours</span></div>
+    <table>
+      <thead>
+        <tr>
+          <th>Location</th>
+          <th class="r">Ord Hrs</th>
+          <th class="r">OT Hrs</th>
+          <th class="r">Total Hrs</th>
+          <th class="r">Labour Cost</th>
+          <th class="r">OT Cost</th>
+          <th class="r">Travel</th>
+          <th class="r">Site Allow</th>
+          <th>OT %</th>
+          <th class="r">% of Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:#fdf5f5;">
+          <td class="ot-cell-red">&#9650; Fountain Gate Super Centre</td>
+          <td class="r">172.0</td>
+          <td class="r ot-cell-red">114.0</td>
+          <td class="r">286.0</td>
+          <td class="r">$28,613.94</td>
+          <td class="r ot-cell-red">$15,962.10</td>
+          <td class="r">$1,441.66</td>
+          <td class="r">$1,494.60</td>
+          <td><div class="ot-bar-cell"><div class="ot-bar-bg"><div class="ot-bar-fg" style="width:100%;background:#d13438;"></div></div><span class="ot-cell-red">39.9%</span></div></td>
+          <td class="r">14.7%</td>
+        </tr>
+        <tr>
+          <td class="loc-top">Aston Craigieburn</td>
+          <td class="r">312.5</td>
+          <td class="r ot-cell-amber">79.0</td>
+          <td class="r">391.5</td>
+          <td class="r loc-top">$30,418.92</td>
+          <td class="r">$10,599.46</td>
+          <td class="r">$1,906.62</td>
+          <td class="r">$1,905.35</td>
+          <td><div class="ot-bar-cell"><div class="ot-bar-bg"><div class="ot-bar-fg" style="width:50.7%;background:#c47800;"></div></div><span class="ot-cell-amber">20.2%</span></div></td>
+          <td class="r loc-top">15.6%</td>
+        </tr>
+        <tr style="background:#fafafa;">
+          <td>BMEP &ndash; Ballarat</td>
+          <td class="r">192.0</td>
+          <td class="r ot-cell-amber">54.5</td>
+          <td class="r">246.5</td>
+          <td class="r">$18,894.44</td>
+          <td class="r">$7,212.52</td>
+          <td class="r">$2,055.26</td>
+          <td class="r">$1,047.63</td>
+          <td><div class="ot-bar-cell"><div class="ot-bar-bg"><div class="ot-bar-fg" style="width:55.4%;background:#c47800;"></div></div><span class="ot-cell-amber">22.1%</span></div></td>
+          <td class="r">9.7%</td>
+        </tr>
+        <tr>
+          <td>Kennards Brunswick</td>
+          <td class="r">101.0</td>
+          <td class="r">40.0</td>
+          <td class="r">141.0</td>
+          <td class="r">$10,869.38</td>
+          <td class="r">$4,470.25</td>
+          <td class="r">$701.65</td>
+          <td class="r">$148.00</td>
+          <td><div class="ot-bar-cell"><div class="ot-bar-bg"><div class="ot-bar-fg" style="width:71.2%;background:#c47800;"></div></div><span class="ot-cell-amber">28.4%</span></div></td>
+          <td class="r">5.6%</td>
+        </tr>
+        <tr style="background:#fafafa;">
+          <td>Kennards Craigieburn</td>
+          <td class="r">112.0</td>
+          <td class="r">35.0</td>
+          <td class="r">147.0</td>
+          <td class="r">$12,682.70</td>
+          <td class="r">$5,042.14</td>
+          <td class="r">$739.78</td>
+          <td class="r">$779.10</td>
+          <td><div class="ot-bar-cell"><div class="ot-bar-bg"><div class="ot-bar-fg" style="width:59.5%;background:#c47800;"></div></div><span>23.8%</span></div></td>
+          <td class="r">6.5%</td>
+        </tr>
+        <tr>
+          <td>Punt Road Oval</td>
+          <td class="r">240.0</td>
+          <td class="r">31.5</td>
+          <td class="r">271.5</td>
+          <td class="r">$19,664.51</td>
+          <td class="r">$4,416.11</td>
+          <td class="r">$1,460.73</td>
+          <td class="r">$1,396.55</td>
+          <td><div class="ot-bar-cell"><div class="ot-bar-bg"><div class="ot-bar-fg" style="width:29%;background:#0078D4;"></div></div><span>11.6%</span></div></td>
+          <td class="r">10.1%</td>
+        </tr>
+        <tr style="background:#fafafa;">
+          <td>Kingston Aquatic Centre</td>
+          <td class="r">184.0</td>
+          <td class="r">29.5</td>
+          <td class="r">213.5</td>
+          <td class="r">$15,576.39</td>
+          <td class="r">$3,848.31</td>
+          <td class="r">$1,136.04</td>
+          <td class="r">$907.38</td>
+          <td><div class="ot-bar-cell"><div class="ot-bar-bg"><div class="ot-bar-fg" style="width:34.6%;background:#0078D4;"></div></div><span>13.8%</span></div></td>
+          <td class="r">8.0%</td>
+        </tr>
+        <tr>
+          <td>Stacked Farm</td>
+          <td class="r">314.5</td>
+          <td class="r">25.5</td>
+          <td class="r">340.0</td>
+          <td class="r">$23,953.64</td>
+          <td class="r">$3,482.88</td>
+          <td class="r">$1,783.64</td>
+          <td class="r">$1,802.00</td>
+          <td><div class="ot-bar-cell"><div class="ot-bar-bg"><div class="ot-bar-fg" style="width:18.8%;background:#0078D4;"></div></div><span>7.5%</span></div></td>
+          <td class="r">12.3%</td>
+        </tr>
+        <tr style="background:#fafafa;">
+          <td>Kennards Cranbourne</td>
+          <td class="r">64.0</td>
+          <td class="r">4.5</td>
+          <td class="r">68.5</td>
+          <td class="r">$4,354.85</td>
+          <td class="r">$615.33</td>
+          <td class="r">$330.99</td>
+          <td class="r">$320.65</td>
+          <td><div class="ot-bar-cell"><div class="ot-bar-bg"><div class="ot-bar-fg" style="width:16.5%;background:#0078D4;"></div></div><span>6.6%</span></div></td>
+          <td class="r">2.2%</td>
+        </tr>
+        <tr>
+          <td>General Service</td>
+          <td class="r">72.0</td>
+          <td class="r">4.5</td>
+          <td class="r">76.5</td>
+          <td class="r">$5,678.62</td>
+          <td class="r">$628.94</td>
+          <td class="r">$347.88</td>
+          <td class="r">$229.50</td>
+          <td><div class="ot-bar-cell"><div class="ot-bar-bg"><div class="ot-bar-fg" style="width:14.8%;background:#0078D4;"></div></div><span>5.9%</span></div></td>
+          <td class="r">2.9%</td>
+        </tr>
+        <tr style="background:#fafafa;">
+          <td>Kennards Roxburgh Park</td>
+          <td class="r">24.0</td>
+          <td class="r">1.0</td>
+          <td class="r">25.0</td>
+          <td class="r">$1,777.62</td>
+          <td class="r">$136.74</td>
+          <td class="r">$136.38</td>
+          <td class="r">$132.50</td>
+          <td><div class="ot-bar-cell"><div class="ot-bar-bg"><div class="ot-bar-fg" style="width:10%;background:#0078D4;"></div></div><span>4.0%</span></div></td>
+          <td class="r">0.9%</td>
+        </tr>
+        <tr>
+          <td>NTS Loan Labour</td>
+          <td class="r">32.0</td>
+          <td class="r" style="color:#ccc;">&mdash;</td>
+          <td class="r">32.0</td>
+          <td class="r">$2,187.84</td>
+          <td class="r" style="color:#ccc;">&mdash;</td>
+          <td class="r">$211.50</td>
+          <td class="r">$96.00</td>
+          <td><div class="ot-bar-cell"><span style="color:#ccc;">&mdash;</span></div></td>
+          <td class="r">1.1%</td>
+        </tr>
+        <tr style="background:#fafafa;color:#bbb;font-style:italic;">
+          <td>Admin / Office</td>
+          <td class="r">240.0</td>
+          <td class="r">&mdash;</td>
+          <td class="r">240.0</td>
+          <td class="r">$17,149.56</td>
+          <td class="r">&mdash;</td>
+          <td class="r">&mdash;</td>
+          <td class="r">&mdash;</td>
+          <td><span>&mdash;</span></td>
+          <td class="r">8.8%</td>
+        </tr>
+        <tr style="color:#bbb;font-style:italic;">
+          <td>School / Apprentices</td>
+          <td class="r">64.0</td>
+          <td class="r">&mdash;</td>
+          <td class="r">64.0</td>
+          <td class="r">$2,706.88</td>
+          <td class="r">&mdash;</td>
+          <td class="r">$196.92</td>
+          <td class="r">&mdash;</td>
+          <td><span>&mdash;</span></td>
+          <td class="r">&mdash;</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td>Overtime Total</td>
+          <td class="r">&mdash;</td>
+          <td class="r">419.0</td>
+          <td class="r">&mdash;</td>
+          <td class="r">&mdash;</td>
+          <td class="r">$56,414.78</td>
+          <td class="r">$12,449.40</td>
+          <td class="r">$10,259.26</td>
+          <td>&mdash;</td>
+          <td class="r">&mdash;</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- RISKS -->
+  <div class="section-hd"><span>Top Workforce Risks</span></div>
+  <div class="card">
+    <div class="card-hd">Automated Risk Flags <span class="card-hd-sub">5 checks &middot; threshold-based &middot; from Exception Engine</span></div>
+    <div class="risk-item">
+      <div class="risk-icon ri-red">!</div>
+      <div class="risk-body">
+        <div class="risk-title">Excessive overtime at Fountain Gate Super Centre</div>
+        <div class="risk-detail">114.0 hours ($15,962) this week &mdash; exceeds high-overtime location threshold</div>
+      </div>
+      <span class="badge br" style="margin-left:auto;align-self:center;">HIGH</span>
+    </div>
+    <div class="risk-item">
+      <div class="risk-icon ri-amber">!</div>
+      <div class="risk-body">
+        <div class="risk-title">Workforce reconciliation below target</div>
+        <div class="risk-detail">88.9% reconciled &mdash; 7 of 63 workforce employees require review</div>
+      </div>
+      <span class="badge ba" style="margin-left:auto;align-self:center;">MED</span>
+    </div>
+    <div class="risk-item">
+      <div class="risk-icon ri-amber">!</div>
+      <div class="risk-body">
+        <div class="risk-title">Significant hours variance (Workforce)</div>
+        <div class="risk-detail">3 employee(s) with material hours variance &mdash; all acknowledged</div>
+      </div>
+      <span class="badge ba" style="margin-left:auto;align-self:center;">MED</span>
+    </div>
+    <div class="risk-item">
+      <div class="risk-icon ri-amber">!</div>
+      <div class="risk-body">
+        <div class="risk-title">Large travel costs</div>
+        <div class="risk-detail">$12,449 this week (5.1% of gross payroll)</div>
+      </div>
+      <span class="badge ba" style="margin-left:auto;align-self:center;">MED</span>
+    </div>
+    <div class="risk-item">
+      <div class="risk-icon ri-amber">!</div>
+      <div class="risk-body">
+        <div class="risk-title">Concentrated labour cost at a single project</div>
+        <div class="risk-detail">Aston Craigieburn accounts for 15.6% of total labour cost this week</div>
+      </div>
+      <span class="badge ba" style="margin-left:auto;align-self:center;">MED</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Northside Electrical Contractors &nbsp;&middot;&nbsp; Weekly Workforce &amp; Payroll Dashboard v2 &nbsp;&middot;&nbsp; Week Ending 28 Jun 2026 &nbsp;&middot;&nbsp; For internal use only</div>
+
+</body>
+</html>
