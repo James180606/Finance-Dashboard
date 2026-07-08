@@ -669,7 +669,7 @@ const suppliers = [
 ];
 
 // Sort by total desc for table
-const sorted = [...suppliers].sort((a,b) => Math.abs(b[7]) - Math.abs(a[7]));
+const sorted = [...suppliers].sort((a,b) => a[0].localeCompare(b[0]));
 
 const tbody = document.getElementById('supplierTable');
 sorted.forEach(r => {
