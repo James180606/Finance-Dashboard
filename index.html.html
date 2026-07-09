@@ -437,27 +437,42 @@
   <!-- CASHFLOW CHART -->
   <div class="section-label">Weekly Cashflow Outlook</div>
   <div class="card" style="margin-bottom:20px;">
-    <div class="card-title">Available Spend After Outgoings <span>4-week forward view &nbsp;&middot;&nbsp; source: Daily Cashflow Dashboard</span></div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;">
-      <div style="background:#f8f8f8;border-radius:8px;padding:13px 16px;">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#999;margin-bottom:4px;">WE 12 Jul 2026</div>
-        <div style="font-size:22px;font-weight:700;color:#107C10;">$451,145</div>
-        <div style="font-size:11px;color:#aaa;margin-top:3px;">Available spend</div>
+    <div class="card-title">Available Spend After Outgoings <span>7-week forward view &nbsp;&middot;&nbsp; source: Weekly Cashflow Forecast</span></div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:18px;">
+      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 12 Jul</div>
+        <div style="font-size:18px;font-weight:700;color:#107C10;">$467,730</div>
+        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
       </div>
-      <div style="background:#f8f8f8;border-radius:8px;padding:13px 16px;">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#999;margin-bottom:4px;">WE 19 Jul 2026</div>
-        <div style="font-size:22px;font-weight:700;color:#107C10;">$601,752</div>
-        <div style="font-size:11px;color:#aaa;margin-top:3px;">Available spend</div>
+      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 19 Jul</div>
+        <div style="font-size:18px;font-weight:700;color:#107C10;">$617,595</div>
+        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
       </div>
-      <div style="background:#f8f8f8;border-radius:8px;padding:13px 16px;">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#999;margin-bottom:4px;">WE 26 Jul 2026</div>
-        <div style="font-size:22px;font-weight:700;color:#107C10;">$756,326</div>
-        <div style="font-size:11px;color:#aaa;margin-top:3px;">Available spend</div>
+      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 26 Jul</div>
+        <div style="font-size:18px;font-weight:700;color:#107C10;">$772,525</div>
+        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
       </div>
-      <div style="background:#f8f8f8;border-radius:8px;padding:13px 16px;">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#999;margin-bottom:4px;">WE 02 Aug 2026</div>
-        <div style="font-size:22px;font-weight:700;color:#107C10;">$398,053</div>
-        <div style="font-size:11px;color:#aaa;margin-top:3px;">Available spend</div>
+      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 02 Aug</div>
+        <div style="font-size:18px;font-weight:700;color:#107C10;">$415,553</div>
+        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
+      </div>
+      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 09 Aug</div>
+        <div style="font-size:18px;font-weight:700;color:#107C10;">$150,314</div>
+        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
+      </div>
+      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 16 Aug</div>
+        <div style="font-size:18px;font-weight:700;color:#107C10;">$560,135</div>
+        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
+      </div>
+      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 23 Aug</div>
+        <div style="font-size:18px;font-weight:700;color:#107C10;">$1,072,997</div>
+        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
       </div>
     </div>
     <div style="position:relative;height:320px;">
@@ -779,32 +794,32 @@ const fmtMoney = (v) => '$' + Math.round(v).toLocaleString('en-AU');
 new Chart(cashflowCtx, {
   type: 'bar',
   data: {
-    labels: ['WE 12 Jul 2026', 'WE 19 Jul 2026', 'WE 26 Jul 2026', 'WE 02 Aug 2026'],
+    labels: ['WE 12 Jul', 'WE 19 Jul', 'WE 26 Jul', 'WE 02 Aug', 'WE 09 Aug', 'WE 16 Aug', 'WE 23 Aug'],
     datasets: [
       {
         label: 'Wages',
-        data: [162108.21, 157662.324, 158962.6488, 167500],
+        data: [162108.21, 157662.324, 158962.6488, 167500, 162108.21, 157662.324, 158962.6488],
         backgroundColor: '#d13438',
         borderRadius: 0,
         stack: 'cashflow'
       },
       {
         label: 'Expenses',
-        data: [41211.066, 46007.2457, 58215.60834, 49132.7825],
+        data: [24626.72, 30164.0825, 42017.3125, 31632.7825, 24626.72, 30164.0825, 42017.3125],
         backgroundColor: '#e6920a',
         borderRadius: 0,
         stack: 'cashflow'
       },
       {
         label: 'Compliances',
-        data: [420000, 70000, 70000, 70000],
+        data: [420000, 70000, 70000, 70000, 70000, 70000, 70000],
         backgroundColor: '#f97316',
         borderRadius: 0,
         stack: 'cashflow'
       },
       {
         label: 'Available Spend',
-        data: [451145.344, 601751.6003, 756326.3529, 398053.3375],
+        data: [467729.69, 617594.7635, 772524.6487, 415553.3375, 150314.07, 560135.3135, 1072997.1087],
         backgroundColor: '#22c55e',
         borderRadius: 3,
         stack: 'cashflow'
