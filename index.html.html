@@ -317,6 +317,58 @@
     </div>
   </div>
 
+  <!-- CASHFLOW CHART -->
+  <div class="section-label">Weekly Cashflow Outlook</div>
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title">Available Spend After Outgoings <span>7-week forward view &nbsp;&middot;&nbsp; source: Weekly Cashflow Forecast</span></div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:18px;">
+      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 12 Jul</div>
+        <div style="font-size:18px;font-weight:700;color:#107C10;">$467,730</div>
+        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
+      </div>
+      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 19 Jul</div>
+        <div style="font-size:18px;font-weight:700;color:#107C10;">$617,595</div>
+        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
+      </div>
+      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 26 Jul</div>
+        <div style="font-size:18px;font-weight:700;color:#107C10;">$772,525</div>
+        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
+      </div>
+      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 02 Aug</div>
+        <div style="font-size:18px;font-weight:700;color:#107C10;">$415,553</div>
+        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
+      </div>
+      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 09 Aug</div>
+        <div style="font-size:18px;font-weight:700;color:#107C10;">$150,314</div>
+        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
+      </div>
+      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 16 Aug</div>
+        <div style="font-size:18px;font-weight:700;color:#107C10;">$560,135</div>
+        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
+      </div>
+      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 23 Aug</div>
+        <div style="font-size:18px;font-weight:700;color:#107C10;">$1,072,997</div>
+        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
+      </div>
+    </div>
+    <div style="position:relative;height:320px;">
+      <canvas id="cashflowChart"></canvas>
+    </div>
+    <div style="display:flex;gap:20px;margin-top:12px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#555;"><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#22c55e;"></span>Available Spend</div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#555;"><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#f97316;"></span>Compliances</div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#555;"><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#e6920a;"></span>Expenses</div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#555;"><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#d13438;"></span>Wages</div>
+    </div>
+  </div>
+
   <div style="font-size:12px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Accounts Payable Summary</div>
 
   <!-- KPI CARDS -->
@@ -432,58 +484,6 @@
       </div>
     </div>
     <div style="font-size:11px;color:#999;margin-top:10px;">Leave Plus pending · total will increase</div>
-  </div>
-
-  <!-- CASHFLOW CHART -->
-  <div class="section-label">Weekly Cashflow Outlook</div>
-  <div class="card" style="margin-bottom:20px;">
-    <div class="card-title">Available Spend After Outgoings <span>7-week forward view &nbsp;&middot;&nbsp; source: Weekly Cashflow Forecast</span></div>
-    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:18px;">
-      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 12 Jul</div>
-        <div style="font-size:18px;font-weight:700;color:#107C10;">$467,730</div>
-        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
-      </div>
-      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 19 Jul</div>
-        <div style="font-size:18px;font-weight:700;color:#107C10;">$617,595</div>
-        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
-      </div>
-      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 26 Jul</div>
-        <div style="font-size:18px;font-weight:700;color:#107C10;">$772,525</div>
-        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
-      </div>
-      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 02 Aug</div>
-        <div style="font-size:18px;font-weight:700;color:#107C10;">$415,553</div>
-        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
-      </div>
-      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 09 Aug</div>
-        <div style="font-size:18px;font-weight:700;color:#107C10;">$150,314</div>
-        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
-      </div>
-      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 16 Aug</div>
-        <div style="font-size:18px;font-weight:700;color:#107C10;">$560,135</div>
-        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
-      </div>
-      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 23 Aug</div>
-        <div style="font-size:18px;font-weight:700;color:#107C10;">$1,072,997</div>
-        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
-      </div>
-    </div>
-    <div style="position:relative;height:320px;">
-      <canvas id="cashflowChart"></canvas>
-    </div>
-    <div style="display:flex;gap:20px;margin-top:12px;flex-wrap:wrap;">
-      <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#555;"><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#22c55e;"></span>Available Spend</div>
-      <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#555;"><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#f97316;"></span>Compliances</div>
-      <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#555;"><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#e6920a;"></span>Expenses</div>
-      <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#555;"><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#d13438;"></span>Wages</div>
-    </div>
   </div>
 
   <!-- SUPPLIER PAYABLES BY MONTH -->
