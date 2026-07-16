@@ -554,11 +554,11 @@
         <thead>
           <tr>
             <th>Supplier</th>
+            <th>Older</th>
             <th>Jun 2026</th>
             <th>Jul 2026</th>
             <th>Aug 2026</th>
             <th>Sep 2026</th>
-            <th>Older</th>
             <th>Total</th>
           </tr>
         </thead>
@@ -566,11 +566,11 @@
         <tfoot>
           <tr>
             <td>TOTAL</td>
+            <td>$21,167</td>
             <td>$162,941</td>
             <td>$1,169,548</td>
             <td>$885,019</td>
             <td>$194,644</td>
-            <td>$21,167</td>
             <td>$2,433,319</td>
           </tr>
         </tfoot>
@@ -683,11 +683,11 @@ sorted.forEach(r => {
   const cellOlder = r[5] !== 0 ? (r[5] < 0 ? fmt(r[5]) : `<span class="cell-over2">$${r[5].toLocaleString('en-AU',{minimumFractionDigits:2})}</span>`) : '<span class="cell-zero">—</span>';
   tbody.innerHTML += `<tr>
     <td>${r[0]}</td>
+    <td>${cellOlder}</td>
     <td>${r[4]===0?'<span class="cell-zero">—</span>':cellJun}</td>
     <td>${r[3]?'$'+r[3].toLocaleString('en-AU',{minimumFractionDigits:2}):'<span class="cell-zero">—</span>'}</td>
     <td>${r[2]?'$'+r[2].toLocaleString('en-AU',{minimumFractionDigits:2}):'<span class="cell-zero">—</span>'}</td>
     <td>${r[1]?'$'+r[1].toLocaleString('en-AU',{minimumFractionDigits:2}):'<span class="cell-zero">—</span>'}</td>
-    <td>${cellOlder}</td>
     <td class="${totalClass}">${isCredit?fmt(r[6]):'$'+r[6].toLocaleString('en-AU',{minimumFractionDigits:2})}</td>
   </tr>`;
 });
