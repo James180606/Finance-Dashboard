@@ -341,22 +341,12 @@
   <!-- CASHFLOW CHART -->
   <div class="section-label">Weekly Cashflow Outlook</div>
   <div class="card" style="margin-bottom:20px;">
-    <div class="card-title">Available Spend After Outgoings <span>7-week forward view &nbsp;&middot;&nbsp; source: Weekly Cashflow Forecast</span></div>
-    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:18px;">
-      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 19 Jul</div>
-        <div style="font-size:18px;font-weight:700;color:#107C10;">$601,752</div>
-        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
-      </div>
-      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 26 Jul</div>
-        <div style="font-size:18px;font-weight:700;color:#107C10;">$756,326</div>
-        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
-      </div>
+    <div class="card-title">Available Spend After Outgoings <span>9-week forward view &nbsp;&middot;&nbsp; source: Weekly Cashflow Forecast</span></div>
+    <div style="display:grid;grid-template-columns:repeat(9,1fr);gap:8px;margin-bottom:18px;">
       <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
         <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 02 Aug</div>
-        <div style="font-size:18px;font-weight:700;color:#d13438;">-$269,908</div>
-        <div style="font-size:10px;color:#aaa;margin-top:2px;">Deficit</div>
+        <div style="font-size:18px;font-weight:700;color:#107C10;">$301,340</div>
+        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
       </div>
       <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
         <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 09 Aug</div>
@@ -372,6 +362,31 @@
         <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 23 Aug</div>
         <div style="font-size:18px;font-weight:700;color:#107C10;">$874,045</div>
         <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
+      </div>
+      <div style="background:#fff0f0;border-radius:8px;padding:10px 12px;">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 30 Aug</div>
+        <div style="font-size:18px;font-weight:700;color:#d13438;">-$580,685</div>
+        <div style="font-size:10px;color:#aaa;margin-top:2px;">Deficit</div>
+      </div>
+      <div style="background:#fff0f0;border-radius:8px;padding:10px 12px;">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 06 Sep</div>
+        <div style="font-size:18px;font-weight:700;color:#d13438;">-$103,308</div>
+        <div style="font-size:10px;color:#aaa;margin-top:2px;">Deficit</div>
+      </div>
+      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 13 Sep</div>
+        <div style="font-size:18px;font-weight:700;color:#107C10;">$601,009</div>
+        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
+      </div>
+      <div style="background:#f8f8f8;border-radius:8px;padding:10px 12px;">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 20 Sep</div>
+        <div style="font-size:18px;font-weight:700;color:#107C10;">$964,602</div>
+        <div style="font-size:10px;color:#aaa;margin-top:2px;">Available</div>
+      </div>
+      <div style="background:#fff0f0;border-radius:8px;padding:10px 12px;">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:4px;">WE 27 Sep</div>
+        <div style="font-size:18px;font-weight:700;color:#d13438;">-$249,143</div>
+        <div style="font-size:10px;color:#aaa;margin-top:2px;">Deficit</div>
       </div>
     </div>
     <div style="position:relative;height:320px;">
@@ -841,32 +856,32 @@ const fmtMoney = (v) => '$' + Math.round(v).toLocaleString('en-AU');
 new Chart(cashflowCtx, {
   type: 'bar',
   data: {
-    labels: ['WE 19 Jul', 'WE 26 Jul', 'WE 02 Aug', 'WE 09 Aug', 'WE 16 Aug', 'WE 23 Aug'],
+    labels: ['WE 02 Aug', 'WE 09 Aug', 'WE 16 Aug', 'WE 23 Aug', 'WE 30 Aug', 'WE 06 Sep', 'WE 13 Sep', 'WE 20 Sep', 'WE 27 Sep'],
     datasets: [
       {
         label: 'Wages',
-        data: [157662.324, 158962.6488, 167500, 162108.21, 157662.324, 158962.6488],
+        data: [167500, 162108.21, 157662.324, 158962.6488, 167500, 162108.21, 157662.324, 158962.6488, 167500],
         backgroundColor: '#d13438',
         borderRadius: 0,
         stack: 'cashflow'
       },
       {
         label: 'Expenses',
-        data: [46007.2457, 58215.60834, 49132.7825, 41211.066, 46007.2457, 58215.60834],
+        data: [49132.7825, 41211.066, 46007.2457, 58215.60834, 373185.0425, 26582.45, 30164.0825, 42017.3125, 41642.7825],
         backgroundColor: '#e6920a',
         borderRadius: 0,
         stack: 'cashflow'
       },
       {
         label: 'Compliances',
-        data: [70000, 70000, 70000, 70000, 70000, 70000],
+        data: [70000, 70000, 70000, 70000, 70000, 70000, 70000, 70000, 70000],
         backgroundColor: '#f97316',
         borderRadius: 0,
         stack: 'cashflow'
       },
       {
         label: 'Available Spend',
-        data: [601751.6003, 756326.3529, -269908.3825, 133729.724, 544292.1503, 874044.6509],
+        data: [301340.28, 133729.72, 544292.15, 874044.65, -580685.04, -103308.07, 601008.54, 964602.17, -249142.78],
         backgroundColor: '#22c55e',
         borderRadius: 3,
         stack: 'cashflow'
