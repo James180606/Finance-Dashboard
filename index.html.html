@@ -417,7 +417,8 @@
     </div>
   </div>
 
-  <div class="card" style="margin-bottom:20px;">
+  <div style="display:flex;gap:20px;align-items:flex-start;margin-bottom:20px;">
+  <div class="card" style="flex:1.4;min-width:0;">
     <div class="card-title">Current Liabilities</div>
     <div style="display:flex;justify-content:center;gap:40px;align-items:flex-start;">
       <table style="width:460px;border-collapse:collapse;font-size:13px;">
@@ -468,6 +469,24 @@
     </div>
     <div style="font-size:11px;color:#999;margin-top:10px;">Leave Plus pending · total will increase</div>
   </div>
+
+  <!-- CLAIM SCHEDULE CARD -->
+  <div class="card" style="flex:1;min-width:0;">
+    <div class="card-title">Claim Schedule — July 2026</div>
+    <table style="width:100%;border-collapse:collapse;font-size:12.5px;">
+      <thead>
+        <tr style="background:#1a1a2e;color:white;">
+          <th style="padding:10px 10px;text-align:left;font-weight:600;">Client</th>
+          <th style="padding:10px 6px;text-align:center;font-weight:600;font-size:11px;white-space:nowrap;">Submitted</th>
+          <th style="padding:10px 6px;text-align:center;font-weight:600;font-size:11px;white-space:nowrap;">Sched. Rcvd</th>
+          <th style="padding:10px 6px;text-align:center;font-weight:600;font-size:11px;white-space:nowrap;">Pymt Rcvd</th>
+        </tr>
+      </thead>
+      <tbody id="claimScheduleBody"></tbody>
+    </table>
+  </div>
+
+  </div><!-- end flex row: Current Liabilities + Claim Schedule -->
 
   <div style="font-size:12px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Accounts Payable Summary</div>
 
@@ -882,6 +901,46 @@ new Chart(cashflowCtx, {
     }
   }
 });
+
+// CLAIM SCHEDULE
+const claimClients = [
+  'Adco', 'Built Environs', 'Hutchinson Builders', 'Kane Constructions',
+  'Mainbrace', 'Oreana Construct', 'SJ Higgins', 'Total Special Projects',
+  'Hutchinson', 'Hutchinson', 'Hutchinson'
+];
+
+function renderClaimSchedule() {
+  const tbody = document.getElementById('claimScheduleBody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  claimClients.forEach(function(client, idx) {
+    const key = 'claim_' + idx;
+    const state = JSON.parse(localStorage.getItem(key) || '[false,false,false]');
+    const bg = idx % 2 === 1 ? 'background:#fafafa;' : '';
+    const allDone = state[0] && state[1] && state[2];
+    const nameSuffix = (client === 'Hutchinson' && idx >= 8) ? ' <span style="font-size:10px;color:#aaa;">#' + (idx - 7) + '</span>' : '';
+    const checkCols = [0, 1, 2].map(function(fi) {
+      const chk = state[fi];
+      return '<td style="padding:10px 6px;text-align:center;border-bottom:1px solid #f0f0f0;">' +
+        '<input type="checkbox"' + (chk ? ' checked' : '') +
+        ' onchange="saveClaimCheck(' + idx + ',' + fi + ',this.checked)"' +
+        ' style="width:15px;height:15px;accent-color:#107c10;cursor:pointer;"></td>';
+    }).join('');
+    tbody.innerHTML += '<tr style="' + bg + 'border-bottom:1px solid #f0f0f0;">' +
+      '<td style="padding:10px 10px;font-weight:600;color:' + (allDone ? '#107c10' : '#252423') + ';">' + client + nameSuffix + '</td>' +
+      checkCols + '</tr>';
+  });
+}
+
+function saveClaimCheck(rowIdx, colIdx, val) {
+  const key = 'claim_' + rowIdx;
+  const state = JSON.parse(localStorage.getItem(key) || '[false,false,false]');
+  state[colIdx] = val;
+  localStorage.setItem(key, JSON.stringify(state));
+  renderClaimSchedule();
+}
+
+renderClaimSchedule();
 </script>
 </body>
 </html>
