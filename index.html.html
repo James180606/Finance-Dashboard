@@ -174,7 +174,7 @@
   <!-- RECEIVABLES SECTION -->
   <div style="font-size:12px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Expected Cash Receivables — August 2026</div>
 
-  <div class="kpi-row" style="margin-bottom:14px;grid-template-columns:repeat(5,1fr);">
+  <div class="kpi-row" style="margin-bottom:14px;grid-template-columns:repeat(6,1fr);">
     <div class="kpi-card" style="border-left-color:#107c10;">
       <div class="kpi-label">Total Expected</div>
       <div class="kpi-value" style="color:#107c10;">$2.57M</div>
@@ -197,8 +197,13 @@
     </div>
     <div class="kpi-card" style="border-left-color:#1a1a2e;">
       <div class="kpi-label">WE 30 Aug · 24–30 Aug</div>
-      <div class="kpi-value" style="color:#1a1a2e;">$1.18M</div>
-      <div class="kpi-sub">6 receipts</div>
+      <div class="kpi-value" style="color:#1a1a2e;">$785K</div>
+      <div class="kpi-sub">5 receipts</div>
+    </div>
+    <div class="kpi-card" style="border-left-color:#0078d4;">
+      <div class="kpi-label">WE 06 Sep · 31 Aug</div>
+      <div class="kpi-value" style="color:#0078d4;">$399K</div>
+      <div class="kpi-sub">1 receipt</div>
     </div>
   </div>
 
@@ -232,8 +237,13 @@
           </tr>
           <tr style="background:#fafafa;border-bottom:1px solid #f0f0f0;">
             <td style="padding:8px 10px;font-weight:600;color:#1a1a2e;">WE 30 Aug &nbsp;<span style="font-size:10px;color:#aaa;font-weight:400;">24–30 Aug</span></td>
-            <td style="padding:8px 10px;text-align:center;color:#666;">6</td>
-            <td style="padding:8px 10px;text-align:right;font-weight:600;">$1,184,029.47</td>
+            <td style="padding:8px 10px;text-align:center;color:#666;">5</td>
+            <td style="padding:8px 10px;text-align:right;font-weight:600;">$784,731.11</td>
+          </tr>
+          <tr style="border-bottom:1px solid #f0f0f0;">
+            <td style="padding:8px 10px;font-weight:600;color:#0078d4;">WE 06 Sep &nbsp;<span style="font-size:10px;color:#aaa;font-weight:400;">31 Aug</span></td>
+            <td style="padding:8px 10px;text-align:center;color:#666;">1</td>
+            <td style="padding:8px 10px;text-align:right;font-weight:600;">$399,298.36</td>
           </tr>
         </tbody>
         <tfoot>
@@ -332,8 +342,8 @@
             <tr>
               <td>Built Environs</td>
               <td style="text-align:left;">Punt Rd Oval</td>
-              <td>30 Aug</td>
-              <td>27</td>
+              <td>31 Aug</td>
+              <td>28</td>
               <td>$399,298.36</td>
             </tr>
           </tbody>
@@ -848,9 +858,9 @@ new Chart(document.getElementById('liabilitiesChart'), {
   }
 });
 // RECEIVABLES WEEKLY CHART
-const recDates = [['WE 09 Aug', '4–9 Aug'], ['WE 16 Aug', '10–16 Aug'], ['WE 23 Aug', '17–23 Aug'], ['WE 30 Aug', '24–30 Aug']];
-const recAmounts = [255668.88, 1131900.09, 0, 1184029.47];
-const recColors = ['#0078d4', '#e8b84b', '#0078d4', '#1a1a2e'];
+const recDates = [['WE 09 Aug', '4–9 Aug'], ['WE 16 Aug', '10–16 Aug'], ['WE 23 Aug', '17–23 Aug'], ['WE 30 Aug', '24–30 Aug'], ['WE 06 Sep', '31 Aug']];
+const recAmounts = [255668.88, 1131900.09, 0, 784731.11, 399298.36];
+const recColors = ['#0078d4', '#e8b84b', '#0078d4', '#1a1a2e', '#0078d4'];
 new Chart(document.getElementById('receivablesChart'), {
   type: 'bar',
   data: {
