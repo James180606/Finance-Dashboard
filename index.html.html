@@ -172,39 +172,39 @@
   </div>
 
   <!-- RECEIVABLES SECTION -->
-  <div style="font-size:12px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Expected Cash Receivables — July 2026</div>
+  <div style="font-size:12px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Expected Cash Receivables — August 2026</div>
 
   <div class="kpi-row" style="margin-bottom:14px;grid-template-columns:repeat(5,1fr);">
     <div class="kpi-card" style="border-left-color:#107c10;">
       <div class="kpi-label">Total Expected</div>
-      <div class="kpi-value" style="color:#107c10;">$3.71M</div>
-      <div class="kpi-sub">12 receipts · Jul 2026</div>
+      <div class="kpi-value" style="color:#107c10;">$2.10M</div>
+      <div class="kpi-sub">10 receipts · Aug 2026</div>
     </div>
     <div class="kpi-card" style="border-left-color:#0078d4;">
-      <div class="kpi-label">Week 1 · 7–13 Jul</div>
-      <div class="kpi-value" style="color:#0078d4;">$1.19M</div>
-      <div class="kpi-sub">3 receipts</div>
+      <div class="kpi-label">WE 09 Aug · 4–9 Aug</div>
+      <div class="kpi-value" style="color:#0078d4;">$256K</div>
+      <div class="kpi-sub">2 receipts</div>
     </div>
     <div class="kpi-card" style="border-left-color:#e8b84b;">
-      <div class="kpi-label">Week 2 · 14–20 Jul</div>
-      <div class="kpi-value" style="color:#b88a00;">$786K</div>
-      <div class="kpi-sub">1 receipt</div>
+      <div class="kpi-label">WE 16 Aug · 10–16 Aug</div>
+      <div class="kpi-value" style="color:#b88a00;">$1.13M</div>
+      <div class="kpi-sub">3 receipts</div>
     </div>
     <div class="kpi-card" style="border-left-color:#0078d4;">
-      <div class="kpi-label">Week 3 · 21–27 Jul</div>
-      <div class="kpi-value" style="color:#0078d4;">$1.04M</div>
-      <div class="kpi-sub">6 receipts</div>
+      <div class="kpi-label">WE 23 Aug · 17–23 Aug</div>
+      <div class="kpi-value" style="color:#0078d4;">$399K</div>
+      <div class="kpi-sub">1 receipt</div>
     </div>
     <div class="kpi-card" style="border-left-color:#1a1a2e;">
-      <div class="kpi-label">Week 4 · 28 Jul–3 Aug</div>
-      <div class="kpi-value" style="color:#1a1a2e;">$685K</div>
-      <div class="kpi-sub">2 receipts</div>
+      <div class="kpi-label">WE 30 Aug · 24–30 Aug</div>
+      <div class="kpi-value" style="color:#1a1a2e;">$317K</div>
+      <div class="kpi-sub">4 receipts</div>
     </div>
   </div>
 
   <div class="row-3" style="margin-bottom:20px;">
     <div class="card">
-      <div class="card-title">Cash Inflow by Week <span>expected receipts · Jul 2026</span></div>
+      <div class="card-title">Cash Inflow by Week <span>expected receipts · Aug 2026</span></div>
       <div class="chart-wrap" style="height:260px"><canvas id="receivablesChart"></canvas></div>
     </div>
     <div class="card">
@@ -801,8 +801,8 @@ new Chart(document.getElementById('liabilitiesChart'), {
   }
 });
 // RECEIVABLES WEEKLY CHART
-const recDates = [['Week 1', '7–13 Jul'], ['Week 2', '14–20 Jul'], ['Week 3', '21–27 Jul'], ['Week 4', '28 Jul–3 Aug']];
-const recAmounts = [1194021.28, 785807.24, 1043504.61, 684686.12];
+const recDates = [['WE 09 Aug', '4–9 Aug'], ['WE 16 Aug', '10–16 Aug'], ['WE 23 Aug', '17–23 Aug'], ['WE 30 Aug', '24–30 Aug']];
+const recAmounts = [255668, 1131899.72, 399298, 316830];
 const recColors = ['#0078d4', '#e8b84b', '#0078d4', '#1a1a2e'];
 new Chart(document.getElementById('receivablesChart'), {
   type: 'bar',
